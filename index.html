@@ -21,6 +21,26 @@ button{font:inherit;color:#fff;border:0;border-radius:16px;padding:15px 12px;bac
 .item{padding:12px;border:1px solid #2a3d61;border-radius:14px;background:#101a2e}.rarity{color:#7ed8ff}.gold{color:#ffd86b}
 .hidden{display:none}.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#111a2eee;border:1px solid #5f75a5;padding:11px 16px;border-radius:14px;z-index:9}
 .bottom{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;background:#080c18ee;backdrop-filter:blur(12px);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid #253657}.bottom button{background:none;box-shadow:none;padding:8px 2px;font-size:12px}.ico{font-size:22px;display:block}
+
+/* ===== 戰鬥特效 1.0 ===== */
+.fight-stage{position:relative;overflow:hidden;border-radius:18px;margin-bottom:12px;min-height:180px;background:radial-gradient(circle at 70% 35%,#233b70 0 8%,transparent 28%),linear-gradient(145deg,#0d1830,#080b16)}
+.fighter{position:absolute;bottom:22px;font-size:54px;filter:drop-shadow(0 0 10px #5ac8ff);transition:transform .18s}
+.fighter.you{left:18px}.fighter.wolf{right:18px;filter:drop-shadow(0 0 12px #ff394d)}
+.swordfx{position:absolute;left:42px;bottom:74px;width:125px;height:10px;border-radius:10px;background:linear-gradient(90deg,transparent,#dffaff,#4bc7ff,transparent);box-shadow:0 0 18px #49caff;transform:rotate(-24deg) scaleX(0);opacity:0}
+.energy{position:absolute;left:45%;top:44%;width:18px;height:18px;border-radius:50%;background:#bff6ff;box-shadow:0 0 25px #45cfff,0 0 60px #238cff;transform:scale(0);opacity:0}
+.slash{animation:slash .42s ease-out}.cast{animation:cast .65s ease-out}.hit{animation:hit .18s linear 2}.shake{animation:shake .25s linear}.floatdmg{position:absolute;font-weight:900;font-size:28px;color:#ff6b78;text-shadow:0 2px 8px #000;animation:floatdmg .75s ease-out forwards;z-index:5}
+.dodgefx{animation:dodgefx .45s ease-out}
+@keyframes slash{0%{transform:rotate(-24deg) scaleX(0);opacity:0}35%{opacity:1}100%{transform:rotate(-24deg) translateX(210px) scaleX(1);opacity:0}}
+@keyframes cast{0%{transform:scale(.1);opacity:0}35%{transform:scale(1.8);opacity:1}100%{transform:scale(9);opacity:0}}
+@keyframes hit{50%{transform:translateX(-7px);filter:brightness(2) drop-shadow(0 0 18px #ff3b4f)}}
+@keyframes shake{25%{transform:translateX(-4px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+@keyframes floatdmg{0%{transform:translateY(0) scale(.7);opacity:0}20%{opacity:1}100%{transform:translateY(-58px) scale(1.15);opacity:0}}
+@keyframes dodgefx{0%{transform:translateX(0);opacity:1}55%{transform:translateX(-55px);opacity:.45}100%{transform:translateX(0);opacity:1}}
+.victoryfx{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#050914cc;z-index:20;pointer-events:none;opacity:0}
+.victoryfx.show{animation:vshow 1.3s ease-out}
+.victoryfx b{font-size:58px;color:#ffd968;text-shadow:0 0 24px #ffb52e,0 3px 0 #704700;transform:scale(.3)}
+@keyframes vshow{0%{opacity:0}.15%{opacity:1}70%{opacity:1}100%{opacity:0}}
+@keyframes vshow{0%{opacity:0}12%{opacity:1}72%{opacity:1}100%{opacity:0}}
 </style>
 </head>
 <body>
@@ -51,13 +71,20 @@ button{font:inherit;color:#fff;border:0;border-radius:16px;padding:15px 12px;bac
   <section id="story" class="page hidden"><div class="panel"><h2>劇情</h2><p>少年原本只是山村中的普通少年。</p><p>一次意外，他得到一枚神秘玉佩。</p><p>玉佩中的力量正在慢慢甦醒……</p><hr><p>「我不只想活著，我要變強，改變一切。」</p></div></section>
 
   <section id="fight" class="page hidden">
-    <div class="panel"><h2>⚔️ 挑戰黑甲狼</h2><p>黑甲狼 Lv.1</p><div class="hp enemy"><i id="enemybar"></i></div><p id="enemyhp">120 / 120</p><p>少年</p><div class="hp"><i id="playerbar"></i></div><p id="playerhp">120 / 120</p>
+    <div class="panel"><h2>⚔️ 挑戰黑甲狼</h2>
+<div class="fight-stage" id="fightStage">
+  <div class="fighter you" id="youF">🧑🏻‍🎤</div>
+  <div class="fighter wolf" id="wolfF">🐺</div>
+  <div class="swordfx" id="swordFx"></div>
+  <div class="energy" id="energyFx"></div>
+</div>
+<p>黑甲狼 Lv.1</p><div class="hp enemy"><i id="enemybar"></i></div><p id="enemyhp">120 / 120</p><p>少年</p><div class="hp"><i id="playerbar"></i></div><p id="playerhp">120 / 120</p>
       <div class="grid"><button onclick="attack()">⚔️ 青冥斬</button><button onclick="skill()">✨ 劍氣</button><button onclick="dodge()">💨 閃避</button><button onclick="endBattle()">🏃 結束</button></div>
       <div class="log" id="log">戰鬥尚未開始。</div>
     </div>
   </section>
 
-  <div id="toast" class="toast hidden"></div>
+  <div id="toast" class="toast hidden"></div><div id="victoryFx" class="victoryfx"><b>🏆 勝利！</b></div>
   <nav class="bottom"><button onclick="show('home')"><span class="ico">🏠</span>主頁</button><button onclick="show('character')"><span class="ico">⚔️</span>角色</button><button onclick="show('bag')"><span class="ico">🎒</span>背包</button><button onclick="show('story')"><span class="ico">📖</span>劇情</button></nav>
 </div>
 <script>
@@ -71,14 +98,35 @@ function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.add(
 function cultivate(){s.cult+=12;s.prog+=12;if(s.prog>=100){s.prog-=100;s.power+=8;toast('✨ 突破！戰力 +8')}else toast('修為 +12');save();render()}
 function chest(){s.stone+=30;s.power+=3;toast('🎁 玉佩發光！獲得靈石 +30、戰力 +3');save();render()}
 function offline(){s.cult+=18;toast('🌙 離線修為 +18');save();render()}
-function battle(){s.enemy=120;s.player=120;s.busy=true;show('fight');updateFight();$('log').innerHTML='🐺 黑甲狼發出低吼……<br>⚔️ 戰鬥開始！'}
+function battle(){s.enemy=120;s.player=120;s.busy=true;show('fight');$('wolfF').className='fighter wolf';$('youF').className='fighter you';updateFight();$('log').innerHTML='🐺 黑甲狼發出低吼……<br>⚔️ 戰鬥開始！'}
 function updateFight(){$('enemybar').style.width=(s.enemy/120*100)+'%';$('playerbar').style.width=(s.player/120*100)+'%';$('enemyhp').textContent=s.enemy+' / 120';$('playerhp').textContent=s.player+' / 120'}
 function hit(dmg,skillName){if(!s.busy)return;s.enemy=Math.max(0,s.enemy-dmg);$('log').innerHTML=`⚔️ 你使用「${skillName}」，造成 ${dmg} 點傷害！<br>`+$('log').innerHTML;if(s.enemy<=0){win();return}setTimeout(()=>wolf(),500);updateFight()}
-function attack(){hit(Math.floor(Math.random()*10)+14,'青冥斬')}
-function skill(){hit(Math.floor(Math.random()*15)+20,'劍氣')}
-function dodge(){if(!s.busy)return;$('log').innerHTML='💨 你閃過了黑甲狼的撲擊！<br>'+$('log').innerHTML;setTimeout(()=>{},200)}
-function wolf(){if(!s.busy)return;let d=Math.floor(Math.random()*8)+8;s.player=Math.max(0,s.player-d);$('log').innerHTML=`🐺 黑甲狼反擊，造成 ${d} 點傷害！<br>`+$('log').innerHTML;if(s.player<=0){s.busy=false;$('log').innerHTML='💀 你敗給了黑甲狼，回到主頁重新挑戰。<br>'+$('log').innerHTML;toast('戰鬥失敗');}updateFight()}
-function win(){s.busy=false;s.cult+=25;s.stone+=25;s.power+=6;save();updateFight();$('log').innerHTML='🏆 勝利！<br>獲得：修為 +25、靈石 +25、戰力 +6<br>🐺 黑甲狼皮 ×1';toast('🏆 擊敗黑甲狼！');render()}
+function fxClass(id,cls){
+  const e=$(id); e.classList.remove(cls); void e.offsetWidth; e.classList.add(cls);
+}
+function damageFloat(dmg){
+  const e=document.createElement('div'); e.className='floatdmg'; e.textContent='-'+dmg;
+  e.style.right=(70+Math.floor(Math.random()*35))+'px'; e.style.top=(45+Math.floor(Math.random()*35))+'px';
+  $('fightStage').appendChild(e); setTimeout(()=>e.remove(),800);
+}
+function attack(){
+  if(!s.busy)return;
+  fxClass('swordFx','slash'); fxClass('wolfF','hit');
+  const dmg=Math.floor(Math.random()*10)+14; damageFloat(dmg); hit(dmg,'青冥斬');
+}
+function skill(){
+  if(!s.busy)return;
+  fxClass('energyFx','cast'); fxClass('wolfF','hit');
+  const dmg=Math.floor(Math.random()*15)+20; damageFloat(dmg); hit(dmg,'劍氣');
+}
+function dodge(){
+  if(!s.busy)return;
+  fxClass('youF','dodgefx');
+  $('log').innerHTML='💨 你化作殘影，閃過黑甲狼的攻擊！<br>'+$('log').innerHTML;
+  toast('💨 閃避成功！');
+}
+function wolf(){if(!s.busy)return;let d=Math.floor(Math.random()*8)+8; fxClass('youF','shake'); s.player=Math.max(0,s.player-d);$('log').innerHTML=`🐺 黑甲狼反擊，造成 ${d} 點傷害！<br>`+$('log').innerHTML;if(s.player<=0){s.busy=false;$('log').innerHTML='💀 你敗給了黑甲狼，回到主頁重新挑戰。<br>'+$('log').innerHTML;toast('戰鬥失敗');}updateFight()}
+function win(){s.busy=false; fxClass('victoryFx','show'); setTimeout(()=>{$('victoryFx').classList.remove('show')},1400); s.cult+=25;s.stone+=25;s.power+=6;save();updateFight();$('log').innerHTML='🏆 勝利！<br>獲得：修為 +25、靈石 +25、戰力 +6<br>🐺 黑甲狼皮 ×1';toast('🏆 擊敗黑甲狼！');render()}
 function endBattle(){s.busy=false;show('home');toast('已離開戰鬥')}
 load();
 </script>
