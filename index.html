@@ -3,132 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>一枚玉佩，改變少年命運｜修仙RPG</title>
+<title>一枚玉佩｜修仙RPG Demo 1.3</title>
 <style>
-*{box-sizing:border-box} body{margin:0;background:#070b18;color:#eee;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
-button{font:inherit;color:#fff;border:0;border-radius:16px;padding:15px 12px;background:linear-gradient(135deg,#263f78,#355fa7);box-shadow:0 8px 22px #0007}
-.app{max-width:520px;margin:auto;min-height:100vh;background:linear-gradient(#0b1630,#080b17);padding-bottom:88px}
-.top{padding:16px 18px 8px;display:flex;justify-content:space-between;align-items:center}.title{font-weight:800;font-size:20px}.sub{font-size:12px;color:#9eaccb}
-.hero{margin:8px 14px;border:1px solid #314873;border-radius:24px;overflow:hidden;background:radial-gradient(circle at 70% 25%,#344e83 0 7%,transparent 25%),linear-gradient(160deg,#14264a,#09101f 70%);min-height:255px;position:relative}
-.moon{position:absolute;width:80px;height:80px;border-radius:50%;background:#f3e7bd;right:28px;top:22px;box-shadow:0 0 35px #fff8}.mount{position:absolute;bottom:0;width:100%;height:95px;background:linear-gradient(135deg,transparent 30%,#111b31 31% 55%,transparent 56%),linear-gradient(35deg,#0c1427 30%,transparent 31% 60%,#101b31 61%);opacity:.95}
-.person{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:150px;height:190px}.head{position:absolute;left:48px;top:8px;width:58px;height:64px;border-radius:50% 50% 46% 46%;background:#e8b98f;border:8px solid #11182a;box-shadow:0 0 0 4px #26324f}.hair{position:absolute;left:40px;top:0;width:75px;height:45px;background:#111827;border-radius:50% 50% 25% 25%;transform:rotate(-5deg)}.body{position:absolute;left:28px;top:70px;width:100px;height:112px;border-radius:35px 35px 20px 20px;background:linear-gradient(100deg,#dce6ef 0 35%,#172a4e 36% 75%,#0b1020 76%);border:4px solid #394f79}.belt{position:absolute;left:37px;top:108px;width:82px;height:10px;background:#d9aa42}.sword{position:absolute;right:-10px;top:66px;width:16px;height:126px;background:linear-gradient(90deg,#8be7ff,#eafcff,#5bb5e8);transform:rotate(-24deg);border-radius:10px;box-shadow:0 0 16px #55caff}.sword:after{content:"";position:absolute;bottom:-17px;left:-13px;width:42px;height:13px;border-radius:10px;background:#d6a83e}
-.badge{position:absolute;left:16px;bottom:16px;background:#121a30dd;border:1px solid #52678f;padding:8px 12px;border-radius:12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 14px}.stat{padding:12px;border:1px solid #263b64;border-radius:16px;background:#0e1528}.stat b{display:block;font-size:22px;margin-top:3px}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 14px}.tabs button{padding:11px 4px;font-size:13px}
-.panel{margin:0 14px;padding:15px;border:1px solid #263b64;border-radius:20px;background:#0d1426}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wide{grid-column:1/-1}
-.hp{height:13px;background:#263047;border-radius:10px;overflow:hidden}.hp i{display:block;height:100%;background:linear-gradient(90deg,#49d57d,#b7f55a);width:100%}.enemy i{background:linear-gradient(90deg,#e83b4f,#ff9c43)}
-.log{height:110px;overflow:auto;background:#070b15;border-radius:12px;padding:10px;font-size:13px;line-height:1.6;color:#cbd5ec;margin-top:10px}
-.item{padding:12px;border:1px solid #2a3d61;border-radius:14px;background:#101a2e}.rarity{color:#7ed8ff}.gold{color:#ffd86b}
-.hidden{display:none}.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#111a2eee;border:1px solid #5f75a5;padding:11px 16px;border-radius:14px;z-index:9}
-.bottom{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;background:#080c18ee;backdrop-filter:blur(12px);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid #253657}.bottom button{background:none;box-shadow:none;padding:8px 2px;font-size:12px}.ico{font-size:22px;display:block}
-
-/* ===== 戰鬥特效 1.0 ===== */
-.fight-stage{position:relative;overflow:hidden;border-radius:18px;margin-bottom:12px;min-height:180px;background:radial-gradient(circle at 70% 35%,#233b70 0 8%,transparent 28%),linear-gradient(145deg,#0d1830,#080b16)}
-.fighter{position:absolute;bottom:22px;font-size:54px;filter:drop-shadow(0 0 10px #5ac8ff);transition:transform .18s}
-.fighter.you{left:18px}.fighter.wolf{right:18px;filter:drop-shadow(0 0 12px #ff394d)}
-.swordfx{position:absolute;left:42px;bottom:74px;width:125px;height:10px;border-radius:10px;background:linear-gradient(90deg,transparent,#dffaff,#4bc7ff,transparent);box-shadow:0 0 18px #49caff;transform:rotate(-24deg) scaleX(0);opacity:0}
-.energy{position:absolute;left:45%;top:44%;width:18px;height:18px;border-radius:50%;background:#bff6ff;box-shadow:0 0 25px #45cfff,0 0 60px #238cff;transform:scale(0);opacity:0}
-.slash{animation:slash .42s ease-out}.cast{animation:cast .65s ease-out}.hit{animation:hit .18s linear 2}.shake{animation:shake .25s linear}.floatdmg{position:absolute;font-weight:900;font-size:28px;color:#ff6b78;text-shadow:0 2px 8px #000;animation:floatdmg .75s ease-out forwards;z-index:5}
-.dodgefx{animation:dodgefx .45s ease-out}
-@keyframes slash{0%{transform:rotate(-24deg) scaleX(0);opacity:0}35%{opacity:1}100%{transform:rotate(-24deg) translateX(210px) scaleX(1);opacity:0}}
-@keyframes cast{0%{transform:scale(.1);opacity:0}35%{transform:scale(1.8);opacity:1}100%{transform:scale(9);opacity:0}}
-@keyframes hit{50%{transform:translateX(-7px);filter:brightness(2) drop-shadow(0 0 18px #ff3b4f)}}
-@keyframes shake{25%{transform:translateX(-4px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
-@keyframes floatdmg{0%{transform:translateY(0) scale(.7);opacity:0}20%{opacity:1}100%{transform:translateY(-58px) scale(1.15);opacity:0}}
-@keyframes dodgefx{0%{transform:translateX(0);opacity:1}55%{transform:translateX(-55px);opacity:.45}100%{transform:translateX(0);opacity:1}}
-.victoryfx{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#050914cc;z-index:20;pointer-events:none;opacity:0}
-.victoryfx.show{animation:vshow 1.3s ease-out}
-.victoryfx b{font-size:58px;color:#ffd968;text-shadow:0 0 24px #ffb52e,0 3px 0 #704700;transform:scale(.3)}
-@keyframes vshow{0%{opacity:0}.15%{opacity:1}70%{opacity:1}100%{opacity:0}}
-@keyframes vshow{0%{opacity:0}12%{opacity:1}72%{opacity:1}100%{opacity:0}}
+*{box-sizing:border-box} body{margin:0;background:#07101d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+.app{max-width:430px;margin:auto;min-height:100vh;background:linear-gradient(#07111f,#030811);padding-bottom:18px}
+header{padding:14px 12px 8px;text-align:center;font-weight:800;letter-spacing:1px}
+.viewer{padding:8px 12px}
+.screen{display:none;overflow:hidden;border-radius:18px;border:1px solid #46556a;box-shadow:0 10px 35px #0008;background:#000}
+.screen.active{display:block}
+.screen img{display:block;width:100%;height:auto}
+.nav{position:sticky;bottom:0;background:#07101dee;backdrop-filter:blur(12px);padding:8px 6px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-top:1px solid #334257}
+button{border:1px solid #53657d;background:#142238;color:#fff;border-radius:10px;padding:10px 4px;font-weight:700;font-size:13px}
+button:active{transform:scale(.97);background:#263b5c}
+.hint{text-align:center;color:#9eabc0;font-size:12px;padding:7px 12px}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top"><div><div class="title">一枚玉佩，改變少年命運</div><div class="sub">古風修仙・放置 RPG Demo</div></div><div class="sub">Lv.1 少年</div></div>
-
-  <section id="home" class="page">
-    <div class="hero"><div class="moon"></div><div class="mount"></div><div class="person"><div class="hair"></div><div class="head"></div><div class="body"></div><div class="belt"></div><div class="sword"></div></div><div class="badge">「青冥劍」認主・少年 Lv.1</div></div>
-    <div class="stats"><div class="stat">修為<b id="cult">266</b></div><div class="stat">靈石<b id="stone">187</b></div><div class="stat">戰力<b id="power">53</b></div></div>
-    <div class="panel"><div>境界 <b id="realm">練氣二層</b>　<span id="prog">66 / 100</span></div><div class="hp" style="margin-top:8px"><i id="cultbar" style="width:66%"></i></div></div>
-    <div class="grid" style="margin:12px 14px"><button onclick="cultivate()">✨ 開始修煉</button><button onclick="battle()">⚔️ 挑戰黑甲狼</button><button onclick="chest()">🎁 玉佩寶箱</button><button onclick="offline()">🌙 收取離線修為</button></div>
-  </section>
-
-  <section id="character" class="page hidden">
-    <div class="panel"><h2>角色</h2><p>少年・練氣二層</p><div class="grid">
-      <div class="item">❤️ 氣血<br><b>120</b></div><div class="item">⚔️ 攻擊<br><b>18</b></div>
-      <div class="item">🛡️ 防禦<br><b>12</b></div><div class="item">⭐ 暴擊<br><b>5%</b></div>
-      <div class="item">💨 閃避<br><b>3%</b></div><div class="item">🔮 玉佩<br><span class="rarity">天命・未覺醒</span></div>
-    </div></div>
-    <div class="panel" style="margin-top:12px"><h3>裝備</h3><div class="grid"><div class="item">⚔️ 青冥劍<br><span class="rarity">藍・Lv.1</span></div><div class="item">👘 布衣<br><span>白・Lv.1</span></div><div class="item">🟢 玉佩<br><span class="gold">特殊</span></div><div class="item">💍 空位</div></div></div>
-  </section>
-
-  <section id="bag" class="page hidden"><div class="panel"><h2>背包</h2><div class="grid">
-    <div class="item">⚔️ 青冥劍<br><span class="rarity">藍色</span></div><div class="item">🟢 玉佩<br><span class="gold">特殊</span></div>
-    <div class="item">🐺 黑甲狼皮<br><span>材料 ×1</span></div><div class="item">🔷 靈石<br><span>×187</span></div>
-  </div></div></section>
-
-  <section id="story" class="page hidden"><div class="panel"><h2>劇情</h2><p>少年原本只是山村中的普通少年。</p><p>一次意外，他得到一枚神秘玉佩。</p><p>玉佩中的力量正在慢慢甦醒……</p><hr><p>「我不只想活著，我要變強，改變一切。」</p></div></section>
-
-  <section id="fight" class="page hidden">
-    <div class="panel"><h2>⚔️ 挑戰黑甲狼</h2>
-<div class="fight-stage" id="fightStage">
-  <div class="fighter you" id="youF">🧑🏻‍🎤</div>
-  <div class="fighter wolf" id="wolfF">🐺</div>
-  <div class="swordfx" id="swordFx"></div>
-  <div class="energy" id="energyFx"></div>
-</div>
-<p>黑甲狼 Lv.1</p><div class="hp enemy"><i id="enemybar"></i></div><p id="enemyhp">120 / 120</p><p>少年</p><div class="hp"><i id="playerbar"></i></div><p id="playerhp">120 / 120</p>
-      <div class="grid"><button onclick="attack()">⚔️ 青冥斬</button><button onclick="skill()">✨ 劍氣</button><button onclick="dodge()">💨 閃避</button><button onclick="endBattle()">🏃 結束</button></div>
-      <div class="log" id="log">戰鬥尚未開始。</div>
-    </div>
-  </section>
-
-  <div id="toast" class="toast hidden"></div><div id="victoryFx" class="victoryfx"><b>🏆 勝利！</b></div>
-  <nav class="bottom"><button onclick="show('home')"><span class="ico">🏠</span>主頁</button><button onclick="show('character')"><span class="ico">⚔️</span>角色</button><button onclick="show('bag')"><span class="ico">🎒</span>背包</button><button onclick="show('story')"><span class="ico">📖</span>劇情</button></nav>
+<header>一枚玉佩｜改變少年的命運<br><small>Demo 1.3・分離畫面版</small></header>
+<div class="viewer"><section class="screen" id="s0"><img src="01_主頁.png" alt="主頁"></section><section class="screen" id="s1"><img src="02_地圖選擇.png" alt="地圖"></section><section class="screen" id="s2"><img src="03_戰鬥.png" alt="戰鬥"></section><section class="screen" id="s3"><img src="04_技能特效.png" alt="技能"></section><section class="screen" id="s4"><img src="05_勝利.png" alt="勝利"></section><section class="screen" id="s5"><img src="06_角色.png" alt="角色"></section><section class="screen" id="s6"><img src="07_背包.png" alt="背包"></section><section class="screen" id="s7"><img src="08_劇情.png" alt="劇情"></section></div>
+<div class="hint">每個畫面都是獨立素材，按下方按鈕切換位置</div>
+<nav class="nav"><button onclick="showScreen(0)">主頁</button><button onclick="showScreen(1)">地圖</button><button onclick="showScreen(2)">戰鬥</button><button onclick="showScreen(3)">技能</button><button onclick="showScreen(4)">勝利</button><button onclick="showScreen(5)">角色</button><button onclick="showScreen(6)">背包</button><button onclick="showScreen(7)">劇情</button></nav>
 </div>
 <script>
-let s={cult:266,stone:187,power:53,prog:66,enemy:120,player:120,busy:false};
-const $=id=>document.getElementById(id);
-function save(){localStorage.setItem('xiuxian-demo',JSON.stringify(s))}
-function load(){try{Object.assign(s,JSON.parse(localStorage.getItem('xiuxian-demo')||'{}'))}catch(e){};render()}
-function render(){$('cult').textContent=s.cult;$('stone').textContent=s.stone;$('power').textContent=s.power;$('prog').textContent=s.prog+' / 100';$('cultbar').style.width=s.prog+'%'}
-function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');setTimeout(()=> $('toast').classList.add('hidden'),1400)}
-function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden')}
-function cultivate(){s.cult+=12;s.prog+=12;if(s.prog>=100){s.prog-=100;s.power+=8;toast('✨ 突破！戰力 +8')}else toast('修為 +12');save();render()}
-function chest(){s.stone+=30;s.power+=3;toast('🎁 玉佩發光！獲得靈石 +30、戰力 +3');save();render()}
-function offline(){s.cult+=18;toast('🌙 離線修為 +18');save();render()}
-function battle(){s.enemy=120;s.player=120;s.busy=true;show('fight');$('wolfF').className='fighter wolf';$('youF').className='fighter you';updateFight();$('log').innerHTML='🐺 黑甲狼發出低吼……<br>⚔️ 戰鬥開始！'}
-function updateFight(){$('enemybar').style.width=(s.enemy/120*100)+'%';$('playerbar').style.width=(s.player/120*100)+'%';$('enemyhp').textContent=s.enemy+' / 120';$('playerhp').textContent=s.player+' / 120'}
-function hit(dmg,skillName){if(!s.busy)return;s.enemy=Math.max(0,s.enemy-dmg);$('log').innerHTML=`⚔️ 你使用「${skillName}」，造成 ${dmg} 點傷害！<br>`+$('log').innerHTML;if(s.enemy<=0){win();return}setTimeout(()=>wolf(),500);updateFight()}
-function fxClass(id,cls){
-  const e=$(id); e.classList.remove(cls); void e.offsetWidth; e.classList.add(cls);
+const screens=[...document.querySelectorAll('.screen')];
+function showScreen(i){
+  screens.forEach((s,n)=>s.classList.toggle('active',n===i));
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function damageFloat(dmg){
-  const e=document.createElement('div'); e.className='floatdmg'; e.textContent='-'+dmg;
-  e.style.right=(70+Math.floor(Math.random()*35))+'px'; e.style.top=(45+Math.floor(Math.random()*35))+'px';
-  $('fightStage').appendChild(e); setTimeout(()=>e.remove(),800);
-}
-function attack(){
-  if(!s.busy)return;
-  fxClass('swordFx','slash'); fxClass('wolfF','hit');
-  const dmg=Math.floor(Math.random()*10)+14; damageFloat(dmg); hit(dmg,'青冥斬');
-}
-function skill(){
-  if(!s.busy)return;
-  fxClass('energyFx','cast'); fxClass('wolfF','hit');
-  const dmg=Math.floor(Math.random()*15)+20; damageFloat(dmg); hit(dmg,'劍氣');
-}
-function dodge(){
-  if(!s.busy)return;
-  fxClass('youF','dodgefx');
-  $('log').innerHTML='💨 你化作殘影，閃過黑甲狼的攻擊！<br>'+$('log').innerHTML;
-  toast('💨 閃避成功！');
-}
-function wolf(){if(!s.busy)return;let d=Math.floor(Math.random()*8)+8; fxClass('youF','shake'); s.player=Math.max(0,s.player-d);$('log').innerHTML=`🐺 黑甲狼反擊，造成 ${d} 點傷害！<br>`+$('log').innerHTML;if(s.player<=0){s.busy=false;$('log').innerHTML='💀 你敗給了黑甲狼，回到主頁重新挑戰。<br>'+$('log').innerHTML;toast('戰鬥失敗');}updateFight()}
-function win(){s.busy=false; fxClass('victoryFx','show'); setTimeout(()=>{$('victoryFx').classList.remove('show')},1400); s.cult+=25;s.stone+=25;s.power+=6;save();updateFight();$('log').innerHTML='🏆 勝利！<br>獲得：修為 +25、靈石 +25、戰力 +6<br>🐺 黑甲狼皮 ×1';toast('🏆 擊敗黑甲狼！');render()}
-function endBattle(){s.busy=false;show('home');toast('已離開戰鬥')}
-load();
+showScreen(0);
 </script>
 </body>
 </html>
