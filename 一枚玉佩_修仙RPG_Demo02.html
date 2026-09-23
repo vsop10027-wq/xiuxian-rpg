@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一枚玉佩，改變少年命運</title>
+<style>
+body{margin:0;background:#10131a;color:#eee;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.wrap{max-width:520px;margin:auto;padding:18px}.card{background:#191e28;border:1px solid #303746;border-radius:18px;padding:18px;margin-bottom:14px}
+h1{font-size:23px}.sub{color:#aeb7c7;font-size:14px}.realm{font-size:20px;margin:14px 0}
+.bar{height:12px;background:#303746;border-radius:99px;overflow:hidden}.fill{height:100%;width:0;background:#8fd3ff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.stat{background:#11151d;border-radius:12px;padding:12px}.num{font-size:20px;font-weight:700}
+button{width:100%;border:0;border-radius:13px;padding:15px;margin-top:10px;font-size:16px;font-weight:700;background:#d8b36a;color:#17120b}
+button:active{transform:scale(.98)}button.secondary{background:#343d4d;color:#fff}.log{min-height:80px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+<h1>《一枚玉佩，改變少年命運》</h1>
+<div class="sub">修仙放置 RPG · Demo 0.2</div>
+<div class="realm" id="realm">境界：凡人</div>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div class="sub" id="progress">0 / 100 修為</div>
+<div class="stats">
+<div class="stat">修為<div class="num" id="xp">0</div></div>
+<div class="stat">靈石<div class="num" id="stone">100</div></div>
+<div class="stat">戰力<div class="num" id="power">10</div></div>
+<div class="stat">離線收益<div class="num">每秒 +1</div></div>
+</div>
+<button id="cultivate">🧘 修煉一次</button>
+<button id="battle" class="secondary">⚔️ 挑戰黑甲狼</button>
+</div>
+<div class="card"><b>📜 玉佩異象</b><div class="log" id="log">你在山洞中拾得一枚古老玉佩……</div></div>
+</div>
+<script>
+(function(){
+const realms=[
+["凡人",100,10],["練氣一層",300,25],["練氣二層",700,45],["練氣三層",1500,75],
+["練氣四層",3000,120],["練氣五層",6000,190],["練氣六層",12000,300],
+["練氣七層",22000,470],["練氣八層",40000,720],["練氣九層",70000,1100],
+["築基初期",150000,1800]
+];
+let s;
+try{s=JSON.parse(localStorage.getItem("cultivateDemo02"))||{xp:0,stone:100,level:0,last:Date.now()};}catch(e){s={xp:0,stone:100,level:0,last:Date.now()};}
+if(!s.last)s.last=Date.now();
+s.xp+=Math.min(28800,Math.max(0,Math.floor((Date.now()-s.last)/1000)));
+s.last=Date.now();
+
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem("cultivateDemo02",JSON.stringify(s));}catch(e){}}
+function render(){
+ const r=realms[s.level];
+ $("realm").textContent="境界："+r[0];
+ $("xp").textContent=s.xp.toLocaleString();
+ $("stone").textContent=s.stone.toLocaleString();
+ $("power").textContent=r[2].toLocaleString();
+ $("progress").textContent=s.xp.toLocaleString()+" / "+r[1].toLocaleString()+" 修為";
+ $("fill").style.width=Math.min(100,s.xp/r[1]*100)+"%";
+}
+$("cultivate").addEventListener("click",function(){
+ const gain=50+s.level*15;s.xp+=gain;s.stone+=2;
+ if(s.level<realms.length-1 && s.xp>=realms[s.level][1]){
+   s.level++;$("log").textContent="✨ 突破成功！你進入了「"+realms[s.level][0]+"」！";
+ }else{$("log").textContent="🧘 修煉成功，獲得 "+gain+" 點修為。";}
+ s.last=Date.now();save();render();
+});
+$("battle").addEventListener("click",function(){
+ const enemy=80+s.level*130;
+ if(realms[s.level][2]>=enemy){
+   const reward=20+s.level*10;s.stone+=reward;s.xp+=enemy;
+   $("log").textContent="⚔️ 擊敗黑甲狼！獲得 "+reward+" 靈石、"+enemy+" 修為。";
+ }else{$("log").textContent="⚠️ 黑甲狼太強了，先修煉提升戰力吧。";}
+ s.last=Date.now();save();render();
+});
+save();render();
+})();
+</script>
+</body>
+</html>
