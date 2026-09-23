@@ -3,35 +3,176 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>一枚玉佩｜修仙RPG Demo 1.3</title>
+<title>一枚玉佩｜Demo 1.4</title>
 <style>
-*{box-sizing:border-box} body{margin:0;background:#07101d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
-.app{max-width:430px;margin:auto;min-height:100vh;background:linear-gradient(#07111f,#030811);padding-bottom:18px}
-header{padding:14px 12px 8px;text-align:center;font-weight:800;letter-spacing:1px}
-.viewer{padding:8px 12px}
-.screen{display:none;overflow:hidden;border-radius:18px;border:1px solid #46556a;box-shadow:0 10px 35px #0008;background:#000}
+*{box-sizing:border-box}
+body{margin:0;background:#050a12;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+.app{max-width:430px;margin:auto;min-height:100vh;background:#07101b}
+.top{padding:12px;text-align:center;font-weight:800}
+.screen{display:none;padding:10px}
 .screen.active{display:block}
-.screen img{display:block;width:100%;height:auto}
-.nav{position:sticky;bottom:0;background:#07101dee;backdrop-filter:blur(12px);padding:8px 6px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-top:1px solid #334257}
-button{border:1px solid #53657d;background:#142238;color:#fff;border-radius:10px;padding:10px 4px;font-weight:700;font-size:13px}
-button:active{transform:scale(.97);background:#263b5c}
-.hint{text-align:center;color:#9eabc0;font-size:12px;padding:7px 12px}
+.art{width:100%;display:block;border-radius:16px;border:1px solid #42516a;box-shadow:0 8px 28px #0008}
+.panel{margin-top:10px;padding:12px;border:1px solid #394a62;border-radius:14px;background:#0d1828}
+h2{margin:4px 0 8px;font-size:20px}
+p{margin:6px 0;color:#c5cfdf}
+.btns{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+button{border:1px solid #627590;background:#172840;color:#fff;border-radius:11px;padding:12px 6px;font-weight:800}
+button:active{transform:scale(.97)}
+.primary{background:#6b4b16;border-color:#e4b84d}
+.hp{height:14px;background:#202d3e;border-radius:10px;overflow:hidden;margin:6px 0}
+.hp>i{display:block;height:100%;background:#45c77a;width:100%;transition:.25s}
+.log{height:100px;overflow:auto;background:#060b13;border-radius:10px;padding:8px;font-size:13px;color:#cdd7e6}
+.nav{position:sticky;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:7px;background:#07101bec;backdrop-filter:blur(10px);border-top:1px solid #33445b}
+.nav button{font-size:12px;padding:9px 2px}
+.badge{text-align:center;color:#9dacbf;font-size:12px;margin-top:8px}
 </style>
 </head>
 <body>
 <div class="app">
-<header>一枚玉佩｜改變少年的命運<br><small>Demo 1.3・分離畫面版</small></header>
-<div class="viewer"><section class="screen" id="s0"><img src="01_主頁.png" alt="主頁"></section><section class="screen" id="s1"><img src="02_地圖選擇.png" alt="地圖"></section><section class="screen" id="s2"><img src="03_戰鬥.png" alt="戰鬥"></section><section class="screen" id="s3"><img src="04_技能特效.png" alt="技能"></section><section class="screen" id="s4"><img src="05_勝利.png" alt="勝利"></section><section class="screen" id="s5"><img src="06_角色.png" alt="角色"></section><section class="screen" id="s6"><img src="07_背包.png" alt="背包"></section><section class="screen" id="s7"><img src="08_劇情.png" alt="劇情"></section></div>
-<div class="hint">每個畫面都是獨立素材，按下方按鈕切換位置</div>
-<nav class="nav"><button onclick="showScreen(0)">主頁</button><button onclick="showScreen(1)">地圖</button><button onclick="showScreen(2)">戰鬥</button><button onclick="showScreen(3)">技能</button><button onclick="showScreen(4)">勝利</button><button onclick="showScreen(5)">角色</button><button onclick="showScreen(6)">背包</button><button onclick="showScreen(7)">劇情</button></nav>
+<div class="top">一枚玉佩｜改變少年的命運<br><small>Demo 1.4・可玩版</small></div>
+
+<section id="home" class="screen active">
+<img class="art" src="01_主頁.png">
+<div class="panel">
+<h2>命運，就從這枚玉佩開始</h2>
+<p>少年獲得神秘玉佩，踏上修仙之路。</p>
+<div class="btns">
+<button class="primary" onclick="go('map')">開始修行</button>
+<button onclick="go('story')">查看劇情</button>
 </div>
+</div>
+</section>
+
+<section id="map" class="screen">
+<img class="art" src="02_地圖選擇.png">
+<div class="panel">
+<h2>選擇地圖</h2>
+<p>青雲山：適合初入修仙界的修士。</p>
+<div class="btns"><button class="primary" onclick="startBattle()">挑戰黑甲狼</button><button onclick="go('home')">返回主頁</button></div>
+</div>
+</section>
+
+<section id="battle" class="screen">
+<img class="art" src="03_戰鬥.png">
+<div class="panel">
+<h2>黑甲狼 Lv.8</h2>
+<p>黑甲狼 HP：<b id="enemyText">120 / 120</b></p>
+<div class="hp"><i id="enemyBar"></i></div>
+<p>少年 HP：<b id="playerText">120 / 120</b></p>
+<div class="hp"><i id="playerBar"></i></div>
+<div class="btns">
+<button class="primary" onclick="attack()">青冥斬</button>
+<button onclick="defend()">防禦</button>
+<button onclick="skill()">劍氣爆發</button>
+<button onclick="usePotion()">回氣丹</button>
+</div>
+<div class="log" id="log">戰鬥開始！黑甲狼正在注視你……</div>
+</div>
+</section>
+
+<section id="skill" class="screen">
+<img class="art" src="04_技能特效.png">
+<div class="panel">
+<h2>青冥斬・劍氣爆發</h2>
+<p>這是技能特效展示頁。真正戰鬥時可由「劍氣爆發」觸發。</p>
+<button class="primary" onclick="go('battle')">返回戰鬥</button>
+</div>
+</section>
+
+<section id="victory" class="screen">
+<img class="art" src="05_勝利.png">
+<div class="panel">
+<h2>戰鬥勝利！</h2>
+<p>修為 +25　靈石 +25　戰力 +6</p>
+<p>獲得：黑甲狼皮 ×1</p>
+<button class="primary" onclick="go('map')">繼續探索</button>
+</div>
+</section>
+
+<section id="story" class="screen">
+<img class="art" src="08_劇情.png">
+<div class="panel"><h2>玉佩的秘密</h2><p>玉佩散發出一股陌生的氣息。少年不知道的是，真正的命運才剛剛開始……</p>
+<button onclick="go('home')">返回主頁</button></div>
+</section>
+
+<section id="character" class="screen">
+<img class="art" src="06_角色.png">
+<div class="panel"><h2>角色</h2><p>境界：凡人　戰力：100</p><button onclick="go('home')">返回</button></div>
+</section>
+
+<section id="bag" class="screen">
+<img class="art" src="07_背包.png">
+<div class="panel"><h2>背包</h2><p>黑甲狼皮 ×1　靈石 ×25　修為丹 ×1</p><button onclick="go('home')">返回</button></div>
+</section>
+
+<div class="badge">目前版本：Demo 1.4｜真正可按、可戰鬥、可勝利</div>
+<nav class="nav">
+<button onclick="go('home')">主頁</button>
+<button onclick="go('map')">地圖</button>
+<button onclick="go('character')">角色</button>
+<button onclick="go('bag')">背包</button>
+</nav>
+</div>
+
 <script>
-const screens=[...document.querySelectorAll('.screen')];
-function showScreen(i){
-  screens.forEach((s,n)=>s.classList.toggle('active',n===i));
-  window.scrollTo({top:0,behavior:'smooth'});
+let enemy=120, player=120, defending=false, ended=false;
+const $=id=>document.getElementById(id);
+function go(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ $(id).classList.add('active');
+ window.scrollTo(0,0);
 }
-showScreen(0);
+function startBattle(){
+ enemy=120; player=120; defending=false; ended=false;
+ update();
+ $("log").innerHTML="戰鬥開始！黑甲狼正在注視你……";
+ go('battle');
+}
+function update(){
+ $("enemyText").textContent=enemy+" / 120";
+ $("playerText").textContent=player+" / 120";
+ $("enemyBar").style.width=Math.max(0,enemy)/120*100+"%";
+ $("playerBar").style.width=Math.max(0,player)/120*100+"%";
+}
+function write(t){$("log").innerHTML+="<br>"+t;$("log").scrollTop=$("log").scrollHeight}
+function enemyTurn(){
+ if(ended)return;
+ let dmg=defending?6:12;
+ player=Math.max(0,player-dmg);
+ write("黑甲狼反擊！你受到 "+dmg+" 點傷害。");
+ defending=false; update();
+ if(player<=0){ended=true;write("你被擊倒了……");}
+}
+function attack(){
+ if(ended)return;
+ let dmg=18+Math.floor(Math.random()*9);
+ enemy=Math.max(0,enemy-dmg); write("青冥斬！造成 "+dmg+" 點傷害。"); update();
+ if(enemy<=0){win();return}
+ setTimeout(enemyTurn,350);
+}
+function skill(){
+ if(ended)return;
+ let dmg=35+Math.floor(Math.random()*16);
+ enemy=Math.max(0,enemy-dmg); write("劍氣爆發！造成 "+dmg+" 點傷害！"); update();
+ if(enemy<=0){win();return}
+ setTimeout(enemyTurn,350);
+}
+function defend(){
+ if(ended)return;
+ defending=true;write("你進入防禦姿態，下一次受到的傷害降低。");
+ setTimeout(enemyTurn,350);
+}
+function usePotion(){
+ if(ended)return;
+ let heal=Math.min(25,120-player); player+=heal;
+ write("服下回氣丹，恢復 "+heal+" 點生命。");update();
+ setTimeout(enemyTurn,350);
+}
+function win(){
+ ended=true; enemy=0; update();
+ write("黑甲狼倒下了！");
+ setTimeout(()=>go('victory'),500);
+}
 </script>
 </body>
 </html>
