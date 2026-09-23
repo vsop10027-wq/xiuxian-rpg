@@ -2,94 +2,85 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#0b1020">
-<title>一枚玉佩，改變少年命運｜修仙 RPG</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>一枚玉佩，改變少年命運｜修仙RPG</title>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;background:#070b16;color:#f4f0df}
-body{display:flex;justify-content:center}
-button{font:inherit;color:inherit;border:0}
-.game{width:min(100%,520px);min-height:100vh;background:
-radial-gradient(circle at 50% 25%,rgba(75,120,210,.18),transparent 32%),
-linear-gradient(#0a1020,#070a13 75%);overflow:hidden;position:relative}
-.top{padding:calc(env(safe-area-inset-top) + 14px) 18px 8px;display:flex;justify-content:space-between;align-items:center}
-.title{font-weight:800;letter-spacing:2px;font-size:18px}.pill{background:#141b2e;border:1px solid #34405e;padding:6px 10px;border-radius:999px;font-size:12px;color:#bfc9e7}
-.hero{margin:10px 14px 0;border:1px solid #39486b;border-radius:24px;background:linear-gradient(180deg,rgba(24,36,66,.9),rgba(9,13,26,.95));box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden}
-.scene{height:355px;position:relative;background:
-radial-gradient(circle at 50% 34%,rgba(126,170,255,.25),transparent 20%),
-linear-gradient(180deg,#17264a 0%,#0e1830 55%,#090d19 100%)}
-.moon{position:absolute;width:80px;height:80px;border-radius:50%;right:34px;top:30px;background:#e7e2c9;box-shadow:0 0 35px rgba(255,240,180,.28)}
-.moon:after{content:"";position:absolute;width:78px;height:78px;border-radius:50%;background:#17264a;left:15px;top:-6px}
-.mountains{position:absolute;bottom:82px;left:0;width:100%;height:150px;background:linear-gradient(135deg,transparent 49%,#0b1120 50%) 0 0/130px 100%,linear-gradient(225deg,transparent 49%,#0b1120 50%) 65px 0/130px 100%;opacity:.9}
-.ground{position:absolute;bottom:0;width:100%;height:92px;background:linear-gradient(#0d1424,#080b13)}
-.character{position:absolute;left:50%;bottom:55px;transform:translateX(-50%);width:150px;height:220px;filter:drop-shadow(0 14px 16px rgba(0,0,0,.55))}
-.head{position:absolute;left:50px;top:12px;width:52px;height:62px;border-radius:50% 50% 45% 45%;background:#f0c59d;border:3px solid #252b3c}
-.hair{position:absolute;left:39px;top:0;width:76px;height:66px;border-radius:55% 55% 30% 35%;background:#141522}
-.hair:after{content:"";position:absolute;left:27px;top:37px;width:52px;height:85px;background:#141522;border-radius:0 0 50% 45%;transform:rotate(8deg)}
-.body{position:absolute;left:30px;top:70px;width:90px;height:115px;border-radius:28px 28px 12px 12px;background:linear-gradient(135deg,#26385f,#101a32);border:3px solid #536a9d}
-.belt{position:absolute;left:29px;top:112px;width:92px;height:12px;background:#b18a43;border:2px solid #e4c66f}
-.arm{position:absolute;top:82px;width:25px;height:100px;background:#1a2745;border:3px solid #52658d;border-radius:20px}.arm.l{left:12px;transform:rotate(13deg)}.arm.r{right:12px;transform:rotate(-18deg)}
-.sword{position:absolute;right:8px;top:42px;width:18px;height:155px;transform:rotate(-18deg);filter:drop-shadow(0 0 9px #70b7ff)}
-.sword .blade{width:10px;height:118px;margin:auto;background:linear-gradient(90deg,#dff5ff,#79c8ff 50%,#eefaff);clip-path:polygon(45% 0,100% 10%,70% 92%,50% 100%,30% 92%,0 10%)}
-.sword .guard{height:10px;width:45px;background:#e1b85b;border-radius:5px;margin-left:-13px}.sword .hilt{height:30px;width:8px;background:#9b7040;margin:auto;border-radius:3px}
-.nameplate{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(7,10,18,.72);border:1px solid #4c5c83;padding:7px 16px;border-radius:999px;font-size:13px;white-space:nowrap}
-.stats{padding:14px 15px 16px}.realm{display:flex;justify-content:space-between;align-items:end}.realm b{font-size:24px}.realm span{font-size:12px;color:#aab4ce}.bar{height:10px;background:#222c43;border-radius:99px;margin:10px 0;overflow:hidden}.bar i{display:block;width:0;height:100%;background:linear-gradient(90deg,#6cc6ff,#c59cff);border-radius:99px;transition:.3s}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#101728;border:1px solid #26334f;border-radius:14px;padding:10px}.stat small{display:block;color:#929db8}.stat strong{font-size:19px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 14px}.action{padding:14px 8px;border-radius:16px;background:linear-gradient(135deg,#263f72,#172546);border:1px solid #49679e;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.25)}.action:active{transform:scale(.97)}.action.primary{background:linear-gradient(135deg,#7653a9,#344f9a);border-color:#8e78d0}
-.log{margin:0 14px 90px;padding:10px 12px;border-radius:14px;background:#0c1220;border:1px solid #202c45;color:#b8c2da;font-size:12px;min-height:42px}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,520px);padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(7,10,18,.94);backdrop-filter:blur(16px);border-top:1px solid #26324c;display:grid;grid-template-columns:repeat(4,1fr);z-index:10}.nav button{background:transparent;color:#8e99b3;font-size:11px}.nav button b{display:block;font-size:22px;margin-bottom:2px}.nav button.active{color:#d8c27a}
-.toast{position:fixed;top:18%;left:50%;transform:translate(-50%,-20px);background:#171e31;border:1px solid #53658e;padding:12px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:360px){.scene{height:315px}.character{transform:translateX(-50%) scale(.88)}}
+*{box-sizing:border-box} body{margin:0;background:#070b18;color:#eee;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+button{font:inherit;color:#fff;border:0;border-radius:16px;padding:15px 12px;background:linear-gradient(135deg,#263f78,#355fa7);box-shadow:0 8px 22px #0007}
+.app{max-width:520px;margin:auto;min-height:100vh;background:linear-gradient(#0b1630,#080b17);padding-bottom:88px}
+.top{padding:16px 18px 8px;display:flex;justify-content:space-between;align-items:center}.title{font-weight:800;font-size:20px}.sub{font-size:12px;color:#9eaccb}
+.hero{margin:8px 14px;border:1px solid #314873;border-radius:24px;overflow:hidden;background:radial-gradient(circle at 70% 25%,#344e83 0 7%,transparent 25%),linear-gradient(160deg,#14264a,#09101f 70%);min-height:255px;position:relative}
+.moon{position:absolute;width:80px;height:80px;border-radius:50%;background:#f3e7bd;right:28px;top:22px;box-shadow:0 0 35px #fff8}.mount{position:absolute;bottom:0;width:100%;height:95px;background:linear-gradient(135deg,transparent 30%,#111b31 31% 55%,transparent 56%),linear-gradient(35deg,#0c1427 30%,transparent 31% 60%,#101b31 61%);opacity:.95}
+.person{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:150px;height:190px}.head{position:absolute;left:48px;top:8px;width:58px;height:64px;border-radius:50% 50% 46% 46%;background:#e8b98f;border:8px solid #11182a;box-shadow:0 0 0 4px #26324f}.hair{position:absolute;left:40px;top:0;width:75px;height:45px;background:#111827;border-radius:50% 50% 25% 25%;transform:rotate(-5deg)}.body{position:absolute;left:28px;top:70px;width:100px;height:112px;border-radius:35px 35px 20px 20px;background:linear-gradient(100deg,#dce6ef 0 35%,#172a4e 36% 75%,#0b1020 76%);border:4px solid #394f79}.belt{position:absolute;left:37px;top:108px;width:82px;height:10px;background:#d9aa42}.sword{position:absolute;right:-10px;top:66px;width:16px;height:126px;background:linear-gradient(90deg,#8be7ff,#eafcff,#5bb5e8);transform:rotate(-24deg);border-radius:10px;box-shadow:0 0 16px #55caff}.sword:after{content:"";position:absolute;bottom:-17px;left:-13px;width:42px;height:13px;border-radius:10px;background:#d6a83e}
+.badge{position:absolute;left:16px;bottom:16px;background:#121a30dd;border:1px solid #52678f;padding:8px 12px;border-radius:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 14px}.stat{padding:12px;border:1px solid #263b64;border-radius:16px;background:#0e1528}.stat b{display:block;font-size:22px;margin-top:3px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 14px}.tabs button{padding:11px 4px;font-size:13px}
+.panel{margin:0 14px;padding:15px;border:1px solid #263b64;border-radius:20px;background:#0d1426}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wide{grid-column:1/-1}
+.hp{height:13px;background:#263047;border-radius:10px;overflow:hidden}.hp i{display:block;height:100%;background:linear-gradient(90deg,#49d57d,#b7f55a);width:100%}.enemy i{background:linear-gradient(90deg,#e83b4f,#ff9c43)}
+.log{height:110px;overflow:auto;background:#070b15;border-radius:12px;padding:10px;font-size:13px;line-height:1.6;color:#cbd5ec;margin-top:10px}
+.item{padding:12px;border:1px solid #2a3d61;border-radius:14px;background:#101a2e}.rarity{color:#7ed8ff}.gold{color:#ffd86b}
+.hidden{display:none}.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#111a2eee;border:1px solid #5f75a5;padding:11px 16px;border-radius:14px;z-index:9}
+.bottom{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;background:#080c18ee;backdrop-filter:blur(12px);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid #253657}.bottom button{background:none;box-shadow:none;padding:8px 2px;font-size:12px}.ico{font-size:22px;display:block}
 </style>
 </head>
 <body>
-<div class="game">
-  <div class="top"><div class="title">☁ 一枚玉佩・天命</div><div class="pill">Demo 1.0 · 手機版</div></div>
-  <section class="hero">
-    <div class="scene">
-      <div class="moon"></div><div class="mountains"></div><div class="ground"></div>
-      <div class="character">
-        <div class="hair"></div><div class="head"></div><div class="body"></div><div class="belt"></div>
-        <div class="arm l"></div><div class="arm r"></div>
-        <div class="sword"><div class="blade"></div><div class="guard"></div><div class="hilt"></div></div>
-      </div>
-      <div class="nameplate">「青冥劍」正在認主 · 少年 Lv.1</div>
-    </div>
-    <div class="stats">
-      <div class="realm"><div><span>境界</span><b id="realm">凡人</b></div><span id="xpText">0 / 100 修為</span></div>
-      <div class="bar"><i id="xp"></i></div>
-      <div class="grid">
-        <div class="stat"><small>修為</small><strong id="cult">0</strong></div>
-        <div class="stat"><small>靈石</small><strong id="stone">100</strong></div>
-        <div class="stat"><small>戰力</small><strong id="power">10</strong></div>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="action primary" onclick="cultivate()">✨ 開始修煉</button>
-      <button class="action" onclick="battle()">⚔️ 挑戰黑甲狼</button>
-      <button class="action" onclick="treasure()">🎁 玉佩寶箱</button>
-      <button class="action" onclick="offline()">🌙 收取離線修為</button>
+<div class="app">
+  <div class="top"><div><div class="title">一枚玉佩，改變少年命運</div><div class="sub">古風修仙・放置 RPG Demo</div></div><div class="sub">Lv.1 少年</div></div>
+
+  <section id="home" class="page">
+    <div class="hero"><div class="moon"></div><div class="mount"></div><div class="person"><div class="hair"></div><div class="head"></div><div class="body"></div><div class="belt"></div><div class="sword"></div></div><div class="badge">「青冥劍」認主・少年 Lv.1</div></div>
+    <div class="stats"><div class="stat">修為<b id="cult">266</b></div><div class="stat">靈石<b id="stone">187</b></div><div class="stat">戰力<b id="power">53</b></div></div>
+    <div class="panel"><div>境界 <b id="realm">練氣二層</b>　<span id="prog">66 / 100</span></div><div class="hp" style="margin-top:8px"><i id="cultbar" style="width:66%"></i></div></div>
+    <div class="grid" style="margin:12px 14px"><button onclick="cultivate()">✨ 開始修煉</button><button onclick="battle()">⚔️ 挑戰黑甲狼</button><button onclick="chest()">🎁 玉佩寶箱</button><button onclick="offline()">🌙 收取離線修為</button></div>
+  </section>
+
+  <section id="character" class="page hidden">
+    <div class="panel"><h2>角色</h2><p>少年・練氣二層</p><div class="grid">
+      <div class="item">❤️ 氣血<br><b>120</b></div><div class="item">⚔️ 攻擊<br><b>18</b></div>
+      <div class="item">🛡️ 防禦<br><b>12</b></div><div class="item">⭐ 暴擊<br><b>5%</b></div>
+      <div class="item">💨 閃避<br><b>3%</b></div><div class="item">🔮 玉佩<br><span class="rarity">天命・未覺醒</span></div>
+    </div></div>
+    <div class="panel" style="margin-top:12px"><h3>裝備</h3><div class="grid"><div class="item">⚔️ 青冥劍<br><span class="rarity">藍・Lv.1</span></div><div class="item">👘 布衣<br><span>白・Lv.1</span></div><div class="item">🟢 玉佩<br><span class="gold">特殊</span></div><div class="item">💍 空位</div></div></div>
+  </section>
+
+  <section id="bag" class="page hidden"><div class="panel"><h2>背包</h2><div class="grid">
+    <div class="item">⚔️ 青冥劍<br><span class="rarity">藍色</span></div><div class="item">🟢 玉佩<br><span class="gold">特殊</span></div>
+    <div class="item">🐺 黑甲狼皮<br><span>材料 ×1</span></div><div class="item">🔷 靈石<br><span>×187</span></div>
+  </div></div></section>
+
+  <section id="story" class="page hidden"><div class="panel"><h2>劇情</h2><p>少年原本只是山村中的普通少年。</p><p>一次意外，他得到一枚神秘玉佩。</p><p>玉佩中的力量正在慢慢甦醒……</p><hr><p>「我不只想活著，我要變強，改變一切。」</p></div></section>
+
+  <section id="fight" class="page hidden">
+    <div class="panel"><h2>⚔️ 挑戰黑甲狼</h2><p>黑甲狼 Lv.1</p><div class="hp enemy"><i id="enemybar"></i></div><p id="enemyhp">120 / 120</p><p>少年</p><div class="hp"><i id="playerbar"></i></div><p id="playerhp">120 / 120</p>
+      <div class="grid"><button onclick="attack()">⚔️ 青冥斬</button><button onclick="skill()">✨ 劍氣</button><button onclick="dodge()">💨 閃避</button><button onclick="endBattle()">🏃 結束</button></div>
+      <div class="log" id="log">戰鬥尚未開始。</div>
     </div>
   </section>
-  <div class="log" id="log">玉佩微微發熱……一股陌生的力量正在甦醒。</div>
-  <nav class="nav">
-    <button class="active"><b>🏠</b>主頁</button><button><b>⚔️</b>戰鬥</button><button><b>🎒</b>背包</button><button><b>📖</b>劇情</button>
-  </nav>
+
+  <div id="toast" class="toast hidden"></div>
+  <nav class="bottom"><button onclick="show('home')"><span class="ico">🏠</span>主頁</button><button onclick="show('character')"><span class="ico">⚔️</span>角色</button><button onclick="show('bag')"><span class="ico">🎒</span>背包</button><button onclick="show('story')"><span class="ico">📖</span>劇情</button></nav>
 </div>
-<div class="toast" id="toast"></div>
 <script>
-let s=JSON.parse(localStorage.getItem("xiuxian_demo")||'{"cult":0,"stone":100,"power":10}');
-const realms=["凡人","練氣一層","練氣二層","練氣三層","練氣四層","練氣五層","練氣六層","練氣七層","練氣八層","練氣九層","築基初期"];
-function save(){localStorage.setItem("xiuxian_demo",JSON.stringify(s));render()}
-function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1300)}
-function render(){let idx=Math.min(Math.floor(s.cult/100),realms.length-1),cur=s.cult%100;document.getElementById("cult").textContent=s.cult;document.getElementById("stone").textContent=s.stone;document.getElementById("power").textContent=s.power;document.getElementById("realm").textContent=realms[idx];document.getElementById("xp").style.width=cur+"%";document.getElementById("xpText").textContent=cur+" / 100 修為";localStorage.setItem("xiuxian_demo",JSON.stringify(s))}
-function log(t){document.getElementById("log").textContent=t}
-function cultivate(){s.cult+=12;s.power+=2;s.stone+=3;log("你盤膝而坐，玉佩吸收月華。修為 +12，靈石 +3。");toast("修為 +12 ✨");save()}
-function battle(){let win=Math.random()>.25;s.cult+=win?18:5;s.stone+=win?20:2;if(win){s.power+=5;log("青冥劍出鞘！你擊敗黑甲狼，獲得靈石 20。");toast("戰鬥勝利 ⚔️")}else{log("黑甲狼逼退了你。你帶傷回營，修為 +5。");toast("戰鬥失利")};save()}
-function treasure(){if(s.stone<30){toast("靈石不足");return}s.stone-=30;let r=Math.random();if(r>.93){s.power+=30;log("轟——赤金光柱沖天！獲得【赤焰魔劍】！戰力 +30");toast("橙色武器！🔥")}else{s.power+=8;log("玉佩寶箱開啟，獲得【月影短劍】。戰力 +8");toast("獲得武器 ✨")}save()}
-function offline(){s.cult+=20;s.stone+=10;log("你收取了離線修煉所得：修為 +20、靈石 +10。");toast("離線收益已領取 🌙");save()}
-render();
+let s={cult:266,stone:187,power:53,prog:66,enemy:120,player:120,busy:false};
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem('xiuxian-demo',JSON.stringify(s))}
+function load(){try{Object.assign(s,JSON.parse(localStorage.getItem('xiuxian-demo')||'{}'))}catch(e){};render()}
+function render(){$('cult').textContent=s.cult;$('stone').textContent=s.stone;$('power').textContent=s.power;$('prog').textContent=s.prog+' / 100';$('cultbar').style.width=s.prog+'%'}
+function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');setTimeout(()=> $('toast').classList.add('hidden'),1400)}
+function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden')}
+function cultivate(){s.cult+=12;s.prog+=12;if(s.prog>=100){s.prog-=100;s.power+=8;toast('✨ 突破！戰力 +8')}else toast('修為 +12');save();render()}
+function chest(){s.stone+=30;s.power+=3;toast('🎁 玉佩發光！獲得靈石 +30、戰力 +3');save();render()}
+function offline(){s.cult+=18;toast('🌙 離線修為 +18');save();render()}
+function battle(){s.enemy=120;s.player=120;s.busy=true;show('fight');updateFight();$('log').innerHTML='🐺 黑甲狼發出低吼……<br>⚔️ 戰鬥開始！'}
+function updateFight(){$('enemybar').style.width=(s.enemy/120*100)+'%';$('playerbar').style.width=(s.player/120*100)+'%';$('enemyhp').textContent=s.enemy+' / 120';$('playerhp').textContent=s.player+' / 120'}
+function hit(dmg,skillName){if(!s.busy)return;s.enemy=Math.max(0,s.enemy-dmg);$('log').innerHTML=`⚔️ 你使用「${skillName}」，造成 ${dmg} 點傷害！<br>`+$('log').innerHTML;if(s.enemy<=0){win();return}setTimeout(()=>wolf(),500);updateFight()}
+function attack(){hit(Math.floor(Math.random()*10)+14,'青冥斬')}
+function skill(){hit(Math.floor(Math.random()*15)+20,'劍氣')}
+function dodge(){if(!s.busy)return;$('log').innerHTML='💨 你閃過了黑甲狼的撲擊！<br>'+$('log').innerHTML;setTimeout(()=>{},200)}
+function wolf(){if(!s.busy)return;let d=Math.floor(Math.random()*8)+8;s.player=Math.max(0,s.player-d);$('log').innerHTML=`🐺 黑甲狼反擊，造成 ${d} 點傷害！<br>`+$('log').innerHTML;if(s.player<=0){s.busy=false;$('log').innerHTML='💀 你敗給了黑甲狼，回到主頁重新挑戰。<br>'+$('log').innerHTML;toast('戰鬥失敗');}updateFight()}
+function win(){s.busy=false;s.cult+=25;s.stone+=25;s.power+=6;save();updateFight();$('log').innerHTML='🏆 勝利！<br>獲得：修為 +25、靈石 +25、戰力 +6<br>🐺 黑甲狼皮 ×1';toast('🏆 擊敗黑甲狼！');render()}
+function endBattle(){s.busy=false;show('home');toast('已離開戰鬥')}
+load();
 </script>
 </body>
 </html>
