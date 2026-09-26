@@ -1,1 +1,137 @@
-
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>天命・破界｜技能極限測試</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02040d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+canvas{display:block;width:100%;height:100%;background:radial-gradient(circle at 50% 35%,#101b3a 0,#050817 45%,#010208 100%)}
+#ui{position:fixed;inset:0;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+.title{margin-top:28px;text-align:center;text-shadow:0 0 10px #8fe9ff,0 0 25px #3b82f6;font-size:24px;font-weight:800}
+.sub{font-size:12px;opacity:.75;margin-top:5px}
+#castBtn{pointer-events:auto;margin-top:auto;margin-bottom:34px;border:1px solid #8ee8ff;border-radius:999px;padding:15px 28px;background:linear-gradient(180deg,#173b6e,#07162f);color:#fff;font-size:18px;font-weight:800;box-shadow:0 0 18px #38bdf8, inset 0 0 18px #0ea5e9;touch-action:manipulation}
+#castBtn:active{transform:scale(.96)}
+#hint{position:absolute;bottom:105px;font-size:12px;opacity:.55}
+#damage{position:absolute;top:48%;font-size:38px;font-weight:900;color:#fff;text-shadow:0 0 8px #fff,0 0 22px #7dd3fc,0 0 45px #60a5fa;opacity:0;transform:scale(.5)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div class="title">天命・破界</div>
+  <div class="sub">終極奧義｜極限特效測試</div>
+  <div id="damage">999,999,999</div>
+  <div id="hint">建議橫向觀看｜按下施放終極技能</div>
+  <button id="castBtn">⚔ 施放終極技能</button>
+</div>
+<script>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+const btn=document.getElementById('castBtn'),damage=document.getElementById('damage');
+let W,H,DPR,particles=[],bolts=[],rings=[],slash=[],shake=0,flash=0,phase=0,running=false,start=0;
+function resize(){DPR=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;canvas.width=W*DPR;canvas.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener('resize',resize);resize();
+function rand(a,b){return a+Math.random()*(b-a)}
+function burst(x,y,n,color,speed=4){
+ for(let i=0;i<n;i++){let a=Math.random()*Math.PI*2,s=rand(.5,speed);
+  particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:rand(1,4),life:rand(35,85),max:85,color});
+ }}
+function lightning(x1,y1,x2,y2,color='#b9f5ff'){
+ let pts=[{x:x1,y:y1}],n=12;
+ for(let i=1;i<n;i++){let t=i/n;pts.push({x:x1+(x2-x1)*t+rand(-35,35),y:y1+(y2-y1)*t+rand(-20,20)})}
+ pts.push({x:x2,y:y2});bolts.push({pts,life:18,color})
+}
+function ring(x,y,r,color){rings.push({x,y,r:5,max:r,life:30,color})}
+function reset(){particles=[];bolts=[];rings=[];slash=[];shake=0;flash=0;phase=0}
+function drawBackground(t){
+ let g=ctx.createRadialGradient(W/2,H*.38,10,W/2,H*.45,Math.max(W,H)*.75);
+ g.addColorStop(0,'#172a59');g.addColorStop(.45,'#071126');g.addColorStop(1,'#010208');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.globalAlpha=.18;
+ for(let i=0;i<80;i++){let x=(i*97)%W,y=(i*53)%H;ctx.fillStyle='#c7e9ff';ctx.fillRect(x,y,1.5,1.5)}
+ ctx.globalAlpha=1;
+}
+function drawPlayer(){
+ let x=W*.5,y=H*.78;
+ ctx.save();ctx.translate(x,y);
+ ctx.shadowBlur=18;ctx.shadowColor='#38bdf8';
+ ctx.fillStyle='#d9f8ff';ctx.beginPath();ctx.arc(0,-34,15,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#67e8f9';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(0,-18);ctx.lineTo(0,28);ctx.stroke();
+ ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-25,20);ctx.moveTo(0,0);ctx.lineTo(25,20);ctx.moveTo(0,28);ctx.lineTo(-16,55);ctx.moveTo(0,28);ctx.lineTo(16,55);ctx.stroke();
+ ctx.restore();
+}
+function drawBoss(t){
+ let x=W*.5,y=H*.27;
+ ctx.save();ctx.translate(x,y);
+ let r=55+Math.sin(t*.006)*4;
+ ctx.shadowBlur=28;ctx.shadowColor='#a855f7';ctx.fillStyle='#220d35';
+ ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#d946ef';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,r+7,0,Math.PI*2);ctx.stroke();
+ ctx.fillStyle='#ff4d6d';ctx.beginPath();ctx.arc(-20,-8,7,0,Math.PI*2);ctx.arc(20,-8,7,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#7e22ce';ctx.lineWidth=9;for(let i=0;i<6;i++){let a=i*Math.PI/3+t*.0005;ctx.beginPath();ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);ctx.lineTo(Math.cos(a)*(r+35),Math.sin(a)*(r+35));ctx.stroke()}
+ ctx.restore();
+}
+function drawFormation(t){
+ let x=W/2,y=H*.49,r=Math.min(W,H)*.25;
+ ctx.save();ctx.translate(x,y);ctx.rotate(t*.00035);
+ for(let k=0;k<3;k++){ctx.rotate(Math.PI/3);ctx.strokeStyle=`rgba(125,211,252,${.35-k*.07})`;ctx.lineWidth=2+k;ctx.beginPath();for(let i=0;i<6;i++){let a=i*Math.PI/3;let px=Math.cos(a)*(r-k*28),py=Math.sin(a)*(r-k*28);i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.stroke()}
+ ctx.restore();
+}
+function update(t){
+ let dt=Math.min(2,(t-(update.last||t))/16.67);update.last=t;
+ for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.985;p.vy*=.985;p.life-=dt}
+ particles=particles.filter(p=>p.life>0);
+ for(const b of bolts)b.life-=dt;bolts=bolts.filter(b=>b.life>0);
+ for(const r of rings){r.r+=(r.max-r.r)*.16*dt;r.life-=dt}rings=rings.filter(r=>r.life>0);
+ shake*=.88;
+ if(running)phase=(t-start)/1000;
+}
+function render(t){
+ update(t);
+ ctx.save();
+ if(shake>1)ctx.translate(rand(-shake,shake),rand(-shake,shake));
+ drawBackground(t);
+ if(!running || phase<2.4) drawBoss(t);
+ drawFormation(t);
+ drawPlayer();
+ if(running){
+  let x=W/2,y=H*.49;
+  if(phase>0.4&&phase<2.2){
+   let a=phase*.000;
+   ctx.save();ctx.translate(x,y);ctx.rotate(-.2);
+   ctx.shadowBlur=35;ctx.shadowColor='#fde68a';ctx.strokeStyle='#dffaff';ctx.lineWidth=8;
+   ctx.beginPath();ctx.moveTo(-15,-120-phase*15);ctx.lineTo(15,120+phase*15);ctx.stroke();
+   ctx.restore();
+   if(Math.random()<.35)lightning(rand(W*.15,W*.85),0,x,y);
+   burst(x,y,3,'#a5f3fc',4);
+  }
+  if(phase>=2.2&&phase<3.5){
+   for(let i=0;i<2;i++)lightning(rand(W*.1,W*.9),0,x,y);
+   ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(phase)*.1);
+   ctx.shadowBlur=45;ctx.shadowColor='#fff';ctx.fillStyle='#e0f2fe';
+   ctx.beginPath();ctx.moveTo(0,-H*.34);ctx.lineTo(22,H*.08);ctx.lineTo(0,H*.05);ctx.lineTo(-22,H*.08);ctx.closePath();ctx.fill();ctx.restore();
+  }
+  if(phase>=3.5&&phase<4.3){
+   ring(x,y,Math.min(W,H)*.45,'#fff');ring(x,y,Math.min(W,H)*.25,'#67e8f9');
+   burst(x,y,90,'#fef08a',12);burst(x,y,70,'#67e8f9',9);burst(x,y,50,'#c084fc',7);
+   shake=22;flash=1;phase=4.31;
+   damage.style.opacity=1;damage.style.transform='scale(1.15)';
+   setTimeout(()=>{damage.style.opacity=0},1100);
+  }
+ }
+ for(const b of bolts){ctx.save();ctx.globalAlpha=Math.min(1,b.life/8);ctx.strokeStyle=b.color;ctx.shadowBlur=18;ctx.shadowColor=b.color;ctx.lineWidth=3;ctx.beginPath();b.pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.restore()}
+ for(const r of rings){ctx.save();ctx.globalAlpha=r.life/30;ctx.strokeStyle=r.color;ctx.shadowBlur=20;ctx.shadowColor=r.color;ctx.lineWidth=4;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,Math.PI*2);ctx.stroke();ctx.restore()}
+ for(const p of particles){ctx.save();ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.color;ctx.shadowBlur=12;ctx.shadowColor=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore()}
+ if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.65})`;ctx.fillRect(0,0,W,H);flash*=.82;if(flash<.01)flash=0}
+ ctx.restore();
+ requestAnimationFrame(render);
+}
+btn.addEventListener('click',()=>{
+ if(running)return;
+ reset();running=true;start=performance.now();damage.style.opacity=0;
+ setTimeout(()=>{running=false;btn.textContent='⚔ 再次施放'},4700);
+});
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
