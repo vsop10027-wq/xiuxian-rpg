@@ -2,202 +2,199 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>一枚玉佩｜Alpha 0.4</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>一枚玉佩｜Alpha 0.5</title>
 <style>
-:root{--bg:#07121b;--panel:#0d1d2a;--line:#38566e;--gold:#d7a83d;--text:#eef5fb}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050c12;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
-body{touch-action:none}
-#app{position:fixed;inset:0;display:flex;flex-direction:column;background:#07131d}
-#hud{height:74px;flex:none;background:linear-gradient(#102638,#0a1824);border-bottom:1px solid #34536a;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:8px 14px;z-index:5}
-.stat{text-align:center;font-weight:800;font-size:14px}.stat b{display:block;font-size:17px;color:#f5cf68;margin-top:2px}
-#gameWrap{position:relative;flex:1;min-height:0;overflow:hidden}
-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#topTag{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#071016e8;border:1px solid #496174;border-radius:22px;padding:9px 16px;font-size:14px;white-space:nowrap;z-index:3}
-#msg{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);background:#08131ddd;border:1px solid #50687a;border-radius:16px;padding:13px 18px;max-width:82%;text-align:center;font-size:15px;line-height:1.5;opacity:0;pointer-events:none;transition:.2s;z-index:7}
-#joystick{position:absolute;left:18px;bottom:20px;width:142px;height:142px;border-radius:50%;border:2px solid #537188;background:#163043aa;z-index:4}
-#stick{position:absolute;left:50%;top:50%;width:60px;height:60px;transform:translate(-50%,-50%);border-radius:50%;background:#77a9c2cc;border:2px solid #b8d9e6}
-#exploreBtn{position:absolute;right:18px;bottom:24px;width:112px;height:112px;border-radius:50%;border:2px solid #e2bd55;background:radial-gradient(circle at 35% 30%,#d5a63e,#69450c);color:white;font-size:18px;font-weight:900;z-index:4;box-shadow:0 8px 25px #0008}
-#hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:12px;color:#b9c9d4;z-index:3;white-space:nowrap}
-#battle{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#21455d,#091722 70%);display:none;z-index:10;flex-direction:column}
-#battleHead{padding:12px 14px;display:flex;justify-content:space-between;font-weight:800}
-.arena{position:relative;flex:1;min-height:0;overflow:hidden}
-.fog{position:absolute;inset:0;background:radial-gradient(circle at 30% 65%,#3a6b5c33 0 12%,transparent 13%),radial-gradient(circle at 75% 40%,#7c9eb733 0 14%,transparent 15%);pointer-events:none}
-.actor{position:absolute;width:140px;height:190px;display:flex;align-items:center;justify-content:center}
-#heroActor{left:9%;bottom:17%}#enemyActor{right:7%;top:15%}
-.nameplate{position:absolute;bottom:-18px;background:#07131ddd;border:1px solid #61798b;border-radius:10px;padding:5px 10px;white-space:nowrap;font-size:13px}
-.hpbox{position:absolute;width:155px;top:-35px;background:#07131dcc;border:1px solid #546d7e;border-radius:8px;padding:4px}.hpbar{height:8px;background:#3b4852;border-radius:5px;overflow:hidden}.hpfill{height:100%;background:#5dd987;width:100%}
-#enemyActor .hpfill{background:#ef6666}
-.sprite{position:relative;width:100px;height:140px}
-.heroBody{position:absolute;left:35px;top:32px;width:34px;height:72px;background:linear-gradient(90deg,#e8edf1 0 42%,#20344c 43%);border-radius:15px 15px 8px 8px;transform:skew(-5deg)}
-.heroHead{position:absolute;left:35px;top:13px;width:34px;height:35px;border-radius:50%;background:#f0c7a8;border:5px solid #182432}
-.hair{position:absolute;left:31px;top:8px;width:43px;height:27px;background:#101820;border-radius:55% 45% 35% 35%;transform:rotate(-7deg)}
-.sword{position:absolute;left:64px;top:56px;width:72px;height:7px;background:linear-gradient(90deg,#a9e8ff,#fff);transform:rotate(-40deg);box-shadow:0 0 12px #54caff}
-.wolfBody{position:absolute;left:14px;top:55px;width:90px;height:55px;background:linear-gradient(#27313a,#111820);border-radius:48% 55% 42% 40%;box-shadow:0 0 18px #ff313344}
-.wolfHead{position:absolute;left:0;top:34px;width:52px;height:45px;background:#1c252d;clip-path:polygon(0 50%,20% 15%,38% 28%,55% 5%,72% 28%,100% 48%,72% 88%,34% 92%);filter:drop-shadow(0 0 6px #f22)}
-.eye{position:absolute;width:7px;height:7px;border-radius:50%;background:#ff4d45;box-shadow:0 0 8px #f33}.e1{left:26px;top:53px}.e2{left:42px;top:51px}
-.claw{position:absolute;right:4px;top:95px;width:24px;height:8px;background:#aab3ba;transform:rotate(15deg)}
-#skills{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:10px 14px 14px;background:#06111ae8;border-top:1px solid #385064}
-.skill{height:52px;border:1px solid #5b7690;border-radius:13px;background:#142b43;color:white;font-size:16px;font-weight:800}.skill:active{transform:scale(.98);background:#1d3d5d}
-#result{position:absolute;inset:0;background:#07131df2;display:none;align-items:center;justify-content:center;z-index:20}
-.resultCard{width:min(86%,360px);border:1px solid #806b39;border-radius:20px;background:linear-gradient(#15293a,#09131d);padding:24px;text-align:center;box-shadow:0 15px 50px #0009}.resultCard h2{margin:0 0 10px;color:#f3cf6b}.loot{margin:15px 0;padding:12px;background:#0a1823;border-radius:12px}.gold{color:#f3cf6b;font-weight:900}
-#backBtn{margin-top:10px;width:100%;height:48px;border-radius:12px;border:1px solid #8b6b31;background:#63470e;color:#fff;font-weight:900}
-@media(max-height:650px){#hud{height:64px}.actor{transform:scale(.82)}#joystick{width:120px;height:120px}#stick{width:52px;height:52px}#exploreBtn{width:94px;height:94px}.skill{height:46px}}
+html,body{margin:0;height:100%;background:#07131d;color:#eef5ff;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;overflow:hidden}
+button{font:inherit;color:inherit}
+#app{height:100dvh;display:flex;flex-direction:column;max-width:720px;margin:auto;background:#07131d}
+.top{flex:0 0 auto;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;background:linear-gradient(#10253a,#0b1927);border-bottom:1px solid #36546b}
+.title{font-size:19px;font-weight:800;display:flex;justify-content:space-between}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px;text-align:center}
+.stat b{display:block;color:#ffd66b;font-size:18px}.stat span{font-size:11px;color:#aabed0}
+.main{position:relative;flex:1;min-height:0;overflow:hidden}
+.screen{position:absolute;inset:0;display:none;overflow:hidden}.screen.active{display:block}
+.map{position:absolute;inset:0;background:
+radial-gradient(circle at 25% 25%,#225044 0 10%,transparent 11%),
+radial-gradient(circle at 75% 55%,#173f37 0 14%,transparent 15%),
+linear-gradient(135deg,#124338,#0b302c 48%,#103a31)}
+.map:before{content:"";position:absolute;inset:0;opacity:.22;background-image:linear-gradient(30deg,transparent 47%,#79a79a 48%,transparent 49%);background-size:80px 80px}
+.zone{position:absolute;left:14px;top:12px;background:#061019d9;border:1px solid #537086;border-radius:20px;padding:8px 14px;font-weight:700;z-index:3}
+.questpin{position:absolute;left:18px;top:65px;background:#d79d28;color:#16100a;border-radius:12px;padding:8px 10px;font-size:12px;font-weight:800;z-index:3}
+.actor,.mob,.boss{position:absolute;transform:translate(-50%,-50%);z-index:4;user-select:none}
+.actor .body{width:30px;height:46px;border-radius:15px 15px 8px 8px;background:linear-gradient(90deg,#e8f4ff,#7ea5c7);border:2px solid #d8efff;box-shadow:0 0 15px #79d9ff}
+.actor .head{width:23px;height:23px;border-radius:50%;background:#f1c7a4;border:2px solid #fff;position:absolute;left:3px;top:-16px}
+.actor .sword{position:absolute;width:6px;height:39px;background:#bfeeff;right:-11px;top:8px;transform:rotate(35deg);border-radius:5px;box-shadow:0 0 9px #65d9ff}
+.mob .shape{width:46px;height:32px;background:#795c48;border-radius:55% 45% 50% 55%;border:2px solid #b6926f;position:relative}
+.mob .shape:after{content:"";position:absolute;right:3px;top:8px;width:7px;height:7px;background:#ff5252;border-radius:50%;box-shadow:-1px 0 0 #160a0a}
+.mob .name,.boss .name{position:absolute;top:35px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:#ffd66b;text-shadow:0 2px 3px #000;font-weight:800}
+.mob.crow .shape{width:48px;height:22px;background:#252b38;border-radius:50% 70% 45% 70%;transform:rotate(-15deg)}
+.mob.boar .shape{background:#5b4538;width:52px;height:36px}
+.boss{z-index:5}.boss .ring{width:105px;height:105px;border-radius:50%;border:7px dashed #d68b4b;box-shadow:0 0 25px #ff633d55;background:#160f18aa;display:flex;align-items:center;justify-content:center}
+.boss .core{width:56px;height:45px;border-radius:50%;background:#191b26;border:3px solid #ff5555;box-shadow:0 0 16px #ff3333}
+.joystick{position:absolute;left:18px;bottom:18px;width:128px;height:128px;border-radius:50%;border:3px solid #7897aa66;background:#18314399;z-index:10;touch-action:none}
+.knob{position:absolute;left:50%;top:50%;width:58px;height:58px;transform:translate(-50%,-50%);border-radius:50%;background:#8dc1dbbb;border:3px solid #c7ecff}
+.action{position:absolute;right:18px;bottom:22px;width:116px;height:116px;border-radius:50%;background:linear-gradient(#dba536,#8c5b16);border:3px solid #f5d37b;z-index:10;font-weight:900;font-size:18px}
+.bottom{flex:0 0 auto;height:76px;padding-bottom:env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(4,1fr);background:#06121d;border-top:1px solid #29465c}
+.nav{border:0;background:none;font-size:11px;color:#9db1c0}.nav b{display:block;font-size:21px}.nav.active{color:#ffd66b}
+.panel{height:100%;overflow:auto;padding:18px 14px 100px;background:linear-gradient(#0b1d2c,#07131d)}
+.card{background:#10263a;border:1px solid #35546c;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 8px 22px #0004}
+h2{margin:0 0 10px;font-size:20px}h3{margin:0 0 7px}
+.bar{height:10px;background:#243847;border-radius:8px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#63dc8a,#b4ed64)}
+.row{display:flex;gap:8px;justify-content:space-between;align-items:center}
+.btn{border:1px solid #52718b;background:#16334e;border-radius:12px;padding:11px 13px;font-weight:800}.gold{background:#795519;border-color:#d6ad53}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.quest{border-left:4px solid #e2ad45}.locked{opacity:.5}
+.small{font-size:12px;color:#a9bdcb;line-height:1.5}
+.enemy{display:flex;gap:12px;align-items:center}.enemyicon{width:58px;height:48px;border-radius:50%;background:#765744;border:2px solid #ba8c69;position:relative}.enemyicon:after{content:"";position:absolute;right:7px;top:13px;width:8px;height:8px;background:#f44;border-radius:50%}
+.battle{display:flex;flex-direction:column;height:100%;padding:16px;background:radial-gradient(circle at 50% 25%,#254862,#091621 65%)}
+.battlefield{flex:1;position:relative;min-height:240px}.fighter{position:absolute;bottom:18%;left:20%;}.foe{position:absolute;top:25%;right:18%}.damage{position:absolute;color:#ffdf73;font-size:30px;font-weight:900;animation:up .6s ease-out forwards}@keyframes up{to{transform:translateY(-50px);opacity:0}}
+.log{background:#07111ad9;border:1px solid #345269;border-radius:12px;padding:10px;min-height:45px;font-size:13px}
+.modal{position:absolute;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.modal.show{display:flex}.modalbox{width:min(92%,520px);background:#102337;border:2px solid #d3a544;border-radius:22px;padding:22px;text-align:center}.modalbox h2{color:#ffd66b;font-size:27px}
+@media(max-height:700px){.top{padding-top:8px}.bottom{height:68px}.joystick{width:105px;height:105px}.action{width:96px;height:96px}.zone{font-size:12px}}
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="hud">
-    <div class="stat">境界<b id="realm">凡人</b></div>
-    <div class="stat">修為<b id="xp">0</b></div>
-    <div class="stat">靈石<b id="stone">100</b></div>
+<header class="top">
+  <div class="title"><span>一枚玉佩，改變少年命運</span><span id="realm">凡人</span></div>
+  <div class="stats">
+    <div class="stat"><b id="lv">1</b><span>等級</span></div>
+    <div class="stat"><b id="xp">0/100</b><span>修為</span></div>
+    <div class="stat"><b id="stone">100</b><span>靈石</span></div>
+    <div class="stat"><b id="power">100</b><span>戰力</span></div>
   </div>
-  <div id="gameWrap">
-    <canvas id="map"></canvas>
-    <div id="topTag">青雲山脈・自由探索</div>
-    <div id="msg"></div>
-    <div id="joystick"><div id="stick"></div></div>
-    <button id="exploreBtn">探索</button>
-    <div id="hint">拖動左下搖桿移動少年・靠近妖獸會觸發遭遇</div>
+</header>
 
-    <div id="battle">
-      <div id="battleHead"><span>⚔ 戰鬥</span><span id="turn">第 1 回合</span></div>
-      <div class="arena">
-        <div class="fog"></div>
-        <div class="actor" id="heroActor">
-          <div class="hpbox"><div class="hpbar"><div id="heroHpFill" class="hpfill"></div></div><span id="heroHpText"></span></div>
-          <div class="sprite"><div class="hair"></div><div class="heroHead"></div><div class="heroBody"></div><div class="sword"></div></div>
-          <div class="nameplate">少年・玉佩持有者</div>
-        </div>
-        <div class="actor" id="enemyActor">
-          <div class="hpbox"><div class="hpbar"><div id="enemyHpFill" class="hpfill"></div></div><span id="enemyHpText"></span></div>
-          <div class="sprite"><div class="wolfBody"></div><div class="wolfHead"></div><div class="eye e1"></div><div class="eye e2"></div><div class="claw"></div></div>
-          <div class="nameplate" id="enemyName">黑甲狼</div>
-        </div>
-      </div>
-      <div id="skills">
-        <button class="skill" data-skill="slash">青冥斬</button>
-        <button class="skill" data-skill="burst">劍氣爆發</button>
-        <button class="skill" data-skill="guard">防禦</button>
-        <button class="skill" data-skill="pill">回氣丹</button>
-      </div>
-    </div>
-
-    <div id="result">
-      <div class="resultCard">
-        <h2 id="resultTitle">戰鬥勝利</h2>
-        <div id="resultText"></div>
-        <div class="loot"><div class="gold" id="lootText"></div></div>
-        <button id="backBtn">返回探索</button>
-      </div>
-    </div>
+<main class="main">
+<section id="explore" class="screen active">
+  <div class="map" id="map">
+    <div class="zone" id="zoneName">青雲山脈・外圍</div>
+    <div class="questpin">📜 主線：初入青雲山</div>
+    <div class="actor" id="actor" style="left:50%;top:55%"><div class="head"></div><div class="body"></div><div class="sword"></div></div>
+    <div class="mob" data-id="wolf" style="left:30%;top:35%"><div class="shape"></div><div class="name">黑甲狼</div></div>
+    <div class="mob boar" data-id="boar" style="left:27%;top:77%"><div class="shape"></div><div class="name">山嶽獠牙獸</div></div>
+    <div class="mob crow" data-id="crow" style="left:72%;top:58%"><div class="shape"></div><div class="name">血羽妖鴉</div></div>
+    <div class="boss" id="boss" style="left:76%;top:26%"><div class="ring"><div class="core"></div></div><div class="name">黑甲狼王・BOSS</div></div>
+    <div class="joystick" id="joy"><div class="knob" id="knob"></div></div>
+    <button class="action" id="exploreBtn">探索</button>
   </div>
+</section>
+
+<section id="quest" class="screen"><div class="panel">
+  <div class="card"><h2>📜 主線任務</h2><div id="mainQuest"></div></div>
+  <div class="card"><h2>🗺️ 區域進度</h2><div id="zones"></div></div>
+  <div class="card"><h2>📖 劇情</h2><p id="story" class="small"></p></div>
+</div></section>
+
+<section id="cultivate" class="screen"><div class="panel">
+  <div class="card"><h2>✨ 修煉</h2><div class="row"><span>目前修為</span><b id="cultXP">0</b></div><div class="bar" style="margin:10px 0"><div class="fill" id="xpbar" style="width:0%"></div></div><button class="btn gold" style="width:100%" onclick="cultivate()">運轉周天・修煉</button></div>
+  <div class="card"><h2>⚔️ 成長</h2><div id="growth"></div></div>
+</div></section>
+
+<section id="bag" class="screen"><div class="panel">
+  <div class="card"><h2>🎒 背包</h2><div id="inventory"></div></div>
+  <div class="card"><h2>🗡️ 裝備</h2><div id="equip"></div></div>
+</div></section>
+
+<section id="story" class="screen"><div class="panel">
+  <div class="card"><h2>📖 主線故事</h2><div id="storyFull"></div></div>
+</div></section>
+
+<section id="battle" class="screen">
+ <div class="battle">
+   <div class="row"><b id="battleName">黑甲狼</b><span id="turn">第1回合</span></div>
+   <div class="battlefield">
+     <div class="fighter"><div class="actor"><div class="head"></div><div class="body"></div><div class="sword"></div></div></div>
+     <div class="foe"><div class="enemyicon" id="foeIcon"></div><div style="text-align:center;margin-top:5px;font-weight:800" id="foeLabel">黑甲狼</div></div>
+   </div>
+   <div class="card" style="margin:0 0 8px"><div class="row"><span>少年 HP</span><b id="playerHP">100/100</b></div><div class="bar"><div class="fill" id="playerHPbar" style="width:100%"></div></div><div class="row" style="margin-top:9px"><span>敵方 HP</span><b id="enemyHP">50/50</b></div><div class="bar"><div class="fill" id="enemyHPbar" style="width:100%"></div></div></div>
+   <div class="grid"><button class="btn" onclick="attack(12,'青冥斬')">青冥斬</button><button class="btn" onclick="attack(22,'劍氣爆發')">劍氣爆發</button><button class="btn" onclick="defend()">防禦</button><button class="btn" onclick="potion()">回氣丹</button></div>
+   <div class="log" id="battleLog" style="margin-top:8px"></div>
+ </div>
+</section>
+
+<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><button class="btn gold" onclick="closeModal()">繼續</button></div></div>
+</main>
+
+<nav class="bottom">
+ <button class="nav active" data-go="explore">🗺️<b>探索</b></button>
+ <button class="nav" data-go="quest">📜<b>任務</b></button>
+ <button class="nav" data-go="cultivate">✨<b>修煉</b></button>
+ <button class="nav" data-go="bag">🎒<b>背包</b></button>
+</nav>
 </div>
+
 <script>
-const canvas=document.getElementById('map'),ctx=canvas.getContext('2d');
-const $=id=>document.getElementById(id);
-let W=0,H=0,dpr=1;
-const state={xp:0,stone:100,realm:'凡人',hp:100,maxHp:100,px:.50,py:.55,enemy:null,battle:false,turn:1,guard:false};
-const monsters=[
- {id:'wolf',name:'黑甲狼',x:.31,y:.34,hp:70,max:70,atk:8,boss:false},
- {id:'boar',name:'山嶽獠牙獸',x:.23,y:.73,hp:82,max:82,atk:10,boss:false},
- {id:'crow',name:'血羽妖鴉',x:.73,y:.57,hp:64,max:64,atk:11,boss:false},
- {id:'boss',name:'黑甲狼王',x:.78,y:.25,hp:150,max:150,atk:16,boss:true}
+const defaultState={
+ level:1,xp:0,stone:100,power:100,hp:100,items:{回氣丹:3},equip:[],
+ quest:0, kills:0,boss:false, zone:0,storyStep:0
+};
+let S=JSON.parse(localStorage.getItem('xiu_alpha05')||'null')||structuredClone(defaultState);
+let battle=null, defending=false, moving=false, joyStart=null;
+
+const quests=[
+ {title:'初入青雲山',desc:'擊敗 2 隻外圍妖獸',need:2,type:'kill',reward:'修為 +60、靈石 +30'},
+ {title:'玉佩異動',desc:'修煉 3 次，讓玉佩覺醒',need:3,type:'cult',reward:'解鎖「劍氣爆發」'},
+ {title:'狼王妖氣',desc:'前往妖氣區並擊敗黑甲狼王',need:1,type:'boss',reward:'解鎖青雲山脈・深處'},
+ {title:'血羽谷',desc:'擊敗 3 隻血羽妖鴉',need:3,type:'crow',reward:'解鎖新區域與裝備系統'},
+ {title:'古洞試煉',desc:'擊敗 2 隻山嶽獠牙獸',need:2,type:'boar',reward:'開啟築基主線'}
 ];
-function resize(){dpr=Math.min(devicePixelRatio||1,2);W=canvas.clientWidth;H=canvas.clientHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
-addEventListener('resize',resize);
-function draw(){
- ctx.clearRect(0,0,W,H);
- const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0b3b34');g.addColorStop(1,'#06251f');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- // terrain
- for(let y=0;y<H;y+=46)for(let x=0;x<W;x+=46){ctx.strokeStyle='rgba(75,150,130,.11)';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+46,y+22);ctx.stroke()}
- // river
- ctx.strokeStyle='#267b78aa';ctx.lineWidth=28;ctx.beginPath();ctx.moveTo(W*.62,-20);ctx.bezierCurveTo(W*.46,H*.25,W*.82,H*.55,W*.56,H+20);ctx.stroke();
- // rocks/trees
- drawTree(W*.83,H*.18,1.05);drawTree(W*.17,H*.80,.9);drawTree(W*.92,H*.62,.8);
- drawMountain(W*.12,H*.16,1);drawMountain(W*.67,H*.83,.85);
- // shrine / boss zone
- ctx.fillStyle='rgba(190,75,70,.13)';ctx.beginPath();ctx.arc(W*.78,H*.25,54,0,Math.PI*2);ctx.fill();
- ctx.strokeStyle='#c77761aa';ctx.setLineDash([5,5]);ctx.beginPath();ctx.arc(W*.78,H*.25,54,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
- ctx.fillStyle='#e8b36a';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('妖氣區',W*.78,H*.25-62);
- monsters.forEach(m=>{if(!state.enemy||state.enemy.id!==m.id) drawMonster(m)});
- drawHero(W*state.px,H*state.py);
+const mobs={
+ wolf:{name:'黑甲狼',hp:50,power:8,xp:28,stone:10},
+ crow:{name:'血羽妖鴉',hp:62,power:10,xp:34,stone:14},
+ boar:{name:'山嶽獠牙獸',hp:78,power:12,xp:42,stone:18},
+ boss:{name:'黑甲狼王',hp:160,power:18,xp:100,stone:60,boss:true}
+};
+function save(){localStorage.setItem('xiu_alpha05',JSON.stringify(S));}
+function realm(){if(S.level<3)return'凡人';if(S.level<6)return'練氣初期';if(S.level<10)return'練氣中期';if(S.level<15)return'練氣後期';if(S.level<20)return'築基初期';return'築基中期';}
+function need(){return 100+(S.level-1)*45}
+function addXP(n){S.xp+=n;while(S.xp>=need()){S.xp-=need();S.level++;S.power+=12;S.hp=100;showModal('境界突破！',`你達到 Lv.${S.level}｜${realm()}<br>戰力 +12`)}}
+function render(){
+ document.getElementById('realm').textContent=realm();document.getElementById('lv').textContent=S.level;
+ document.getElementById('xp').textContent=`${S.xp}/${need()}`;document.getElementById('stone').textContent=S.stone;document.getElementById('power').textContent=S.power;
+ document.getElementById('cultXP').textContent=S.xp;document.getElementById('xpbar').style.width=(S.xp/need()*100)+'%';
+ const q=quests[S.quest]||quests[quests.length-1];
+ document.getElementById('mainQuest').innerHTML=`<div class="quest card"><h3>${q.title}</h3><p>${q.desc}</p><b>獎勵：${q.reward}</b></div>`;
+ document.getElementById('story').textContent=storyText();
+ document.getElementById('storyFull').innerHTML=quests.slice(0,S.quest+1).map((x,i)=>`<div class="card"><b>第${i+1}節｜${x.title}</b><p class="small">${storyFor(i)}</p></div>`).join('');
+ document.getElementById('growth').innerHTML=`Lv.${S.level}｜${realm()}｜戰力 ${S.power}<br>下一級需要修為 ${need()}`;
+ document.getElementById('inventory').innerHTML=Object.entries(S.items).map(([k,v])=>`<div class="row" style="padding:8px 0;border-bottom:1px solid #284355"><span>${k}</span><b>x${v}</b></div>`).join('')||'目前沒有物品';
+ document.getElementById('equip').innerHTML=S.equip.length?S.equip.map(x=>`<div>🟣 ${x}</div>`).join(''):'尚未取得裝備';
+ document.getElementById('zones').innerHTML=`<div class="${S.zone>=0?'card':'card locked'}">青雲山脈・外圍　${S.zone>=0?'已開放':'未開放'}</div><div class="${S.zone>=1?'card':'card locked'}">青雲山脈・深處　${S.zone>=1?'已開放':'擊敗狼王後開放'}</div><div class="${S.zone>=2?'card':'card locked'}">血羽谷　${S.zone>=2?'已開放':'完成前置主線後開放'}</div>`;
+ save();
 }
-function drawTree(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#754a2d';ctx.fillRect(-5,12,10,28);ctx.fillStyle='#26774b';for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(0,-42+i*17);ctx.lineTo(-25+i*4,14+i*8);ctx.lineTo(25-i*4,14+i*8);ctx.closePath();ctx.fill()}ctx.restore()}
-function drawMountain(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#3d625f';ctx.beginPath();ctx.moveTo(-55,40);ctx.lineTo(0,-48);ctx.lineTo(55,40);ctx.closePath();ctx.fill();ctx.fillStyle='#b8d4cc';ctx.beginPath();ctx.moveTo(-20,-16);ctx.lineTo(0,-48);ctx.lineTo(19,-15);ctx.lineTo(8,-22);ctx.lineTo(0,-4);ctx.closePath();ctx.fill();ctx.restore()}
-function drawHero(x,y){
- ctx.save();ctx.translate(x,y);
- ctx.shadowBlur=12;ctx.shadowColor='#7bd5ff88';
- ctx.fillStyle='#e9c0a4';ctx.beginPath();ctx.arc(0,-20,10,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#111821';ctx.beginPath();ctx.arc(0,-23,12,Math.PI,Math.PI*2);ctx.fill();
- ctx.fillStyle='#dfe8ee';ctx.beginPath();ctx.roundRect(-10,-10,20,31,6);ctx.fill();
- ctx.fillStyle='#243b55';ctx.fillRect(0,-10,10,31);
- ctx.strokeStyle='#c9f1ff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(9,-2);ctx.lineTo(28,-25);ctx.stroke();
- ctx.fillStyle='#5cc8ff';ctx.beginPath();ctx.arc(0,10,4,0,Math.PI*2);ctx.fill();
- ctx.restore();
+function storyFor(i){return['你在山門外醒來，玉佩微微發光。前方就是青雲山脈。','玉佩吸收靈氣後出現第一道裂紋，似乎封印著某種力量。','妖氣區深處傳來狼嚎，你第一次感受到真正的妖王威壓。','血羽妖鴉盤踞山谷，玉佩開始對某種古老力量產生共鳴。','古洞入口刻著與玉佩相同的紋路，你的身世開始浮出水面。'][i]||'更深的道路正在等待你。'}
+function storyText(){return storyFor(Math.min(S.quest,4))}
+function cultivate(){addXP(24);S.items.回氣丹=(S.items.回氣丹||3); if(S.quest===1){S.cultCount=(S.cultCount||0)+1;if(S.cultCount>=3){S.quest=2;S.storyStep=2;showModal('主線更新','玉佩覺醒了一道新的力量。前往妖氣區挑戰狼王！')}};render()}
+function startBattle(id){
+ const e=mobs[id];battle={id,...e,max:e.hp};S.hp=Math.min(100,S.hp);defending=false;
+ document.getElementById('battleName').textContent=e.name;document.getElementById('foeLabel').textContent=e.name;document.getElementById('enemyHP').textContent=`${e.hp}/${e.hp}`;document.getElementById('playerHP').textContent=`${S.hp}/100`;document.getElementById('battleLog').textContent=`你遇到了${e.name}！`;
+ document.getElementById('battle').classList.add('active');document.getElementById('explore').classList.remove('active');updateBattle();
 }
-function drawMonster(m){
- const x=W*m.x,y=H*m.y;ctx.save();ctx.translate(x,y);
- if(m.id==='crow'){ctx.fillStyle='#202b39';ctx.beginPath();ctx.ellipse(0,0,24,14,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#a7b7c8';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-5,0);ctx.lineTo(-32,-18);ctx.moveTo(5,0);ctx.lineTo(31,-18);ctx.stroke();ctx.fillStyle='#d8b24c';ctx.beginPath();ctx.moveTo(20,1);ctx.lineTo(34,6);ctx.lineTo(20,9);ctx.fill()}
- else {ctx.fillStyle=m.boss?'#15171c':'#5b5149';ctx.beginPath();ctx.ellipse(0,4,m.boss?37:26,m.boss?25:19,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=m.boss?'#272b33':'#6c6259';ctx.beginPath();ctx.moveTo(-18,-4);ctx.lineTo(-37,-24);ctx.lineTo(-29,-29);ctx.lineTo(-10,-14);ctx.closePath();ctx.fill();ctx.fillStyle='#f24c45';ctx.beginPath();ctx.arc(17,-3,4,0,Math.PI*2);ctx.fill();if(m.boss){ctx.strokeStyle='#bd5a4f';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,5,40,0,Math.PI*2);ctx.stroke()}}
- ctx.fillStyle='#f1c65a';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(m.boss?'BOSS':m.name,x*0+0,44);ctx.restore();
-}
-function updateHud(){$('xp').textContent=state.xp;$('stone').textContent=state.stone;$('realm').textContent=state.xp>=60?'練氣二層':state.xp>=30?'練氣一層':'凡人'}
-function toast(t){$('msg').textContent=t;$('msg').style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>$('msg').style.opacity=0,1800)}
-function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
-function checkEncounter(){
- const p={x:state.px,y:state.py};
- for(const m of monsters){if(dist(p,m)<.075){startEncounter(m);return}}
-}
-function startEncounter(m){
- if(state.battle)return;
- state.enemy={...m};state.battle=true;
- if(m.boss){toast('前方妖氣暴漲……你發現了黑甲狼王！');setTimeout(()=>openBattle(m),450)}
- else {toast('你接近了 '+m.name+'，妖獸發現了你！');setTimeout(()=>openBattle(m),450)}
-}
-function openBattle(m){
- $('battle').style.display='flex';$('enemyName').textContent=m.name+(m.boss?' ・ BOSS':'');state.turn=1;state.hp=Math.max(1,state.hp);state.guard=false;renderBattle()
-}
-function renderBattle(){
- const e=state.enemy;$('heroHpFill').style.width=(state.hp/state.maxHp*100)+'%';$('heroHpText').textContent='少年 HP '+state.hp+'/'+state.maxHp;
- $('enemyHpFill').style.width=(e.hp/e.max*100)+'%';$('enemyHpText').textContent=e.name+' HP '+e.hp+'/'+e.max;
- $('turn').textContent='第 '+state.turn+' 回合';
-}
-function enemyTurn(){
- const e=state.enemy;let dmg=e.atk+(Math.random()*5|0);if(state.guard)dmg=Math.max(1,Math.floor(dmg*.35));state.hp=Math.max(0,state.hp-dmg);state.guard=false;toast(e.name+' 發動攻擊，造成 '+dmg+' 傷害。');renderBattle();if(state.hp<=0)endBattle(false)
-}
-function playerSkill(s){
- if(!state.enemy)return;
- let dmg=0;
- if(s==='slash')dmg=18+(Math.random()*7|0);
- if(s==='burst')dmg=32+(Math.random()*10|0);
- if(s==='guard'){state.guard=true;toast('你架起青冥劍，準備抵擋下一擊。');state.turn++;setTimeout(enemyTurn,550);return}
- if(s==='pill'){state.hp=Math.min(state.maxHp,state.hp+28);toast('服下回氣丹，恢復 28 HP。');state.turn++;renderBattle();setTimeout(enemyTurn,550);return}
- state.enemy.hp=Math.max(0,state.enemy.hp-dmg);toast((s==='burst'?'劍氣爆發！':'青冥斬！')+' 造成 '+dmg+' 傷害。');renderBattle();
- if(state.enemy.hp<=0){setTimeout(()=>endBattle(true),500);return}
- state.turn++;setTimeout(enemyTurn,550)
-}
-document.querySelectorAll('.skill').forEach(b=>b.addEventListener('click',()=>playerSkill(b.dataset.skill)));
-function endBattle(win){
- $('battle').style.display='none';$('result').style.display='flex';
- if(win){
-  const e=state.enemy,reward=e.boss?80:25;state.xp+=reward;state.stone+=e.boss?60:12;state.hp=Math.max(1,state.hp);
-  $('resultTitle').textContent=e.boss?'BOSS擊破！':'戰鬥勝利！';$('resultText').innerHTML='你擊敗了 <b>'+e.name+'</b>。<br>修為 +'+reward+'　靈石 +'+(e.boss?60:12);
-  $('lootText').textContent=e.boss?'獲得：狼王戰甲・Boss 戰利品':'獲得：妖獸材料 ×1';
- }else{$('resultTitle').textContent='戰鬥失敗';$('resultText').textContent='少年倒下了……回到探索區。';$('lootText').textContent='沒有獲得戰利品。';state.hp=100}
- updateHud()
-}
-$('backBtn').onclick=()=>{$('result').style.display='none';state.enemy=null;state.battle=false;state.hp=Math.max(1,state.hp);draw()};
-let joy={active:false,id:null,cx:0,cy:0};
-const joyEl=$('joystick'),stick=$('stick');
-function joyStart(e){const t=e.changedTouches[0];joy.active=true;joy.id=t.identifier;const r=joyEl.getBoundingClientRect();joy.cx=r.left+r.width/2;joy.cy=r.top+r.height/2;moveJoy(t)}
-function moveJoy(t){if(!joy.active)return;let dx=t.clientX-joy.cx,dy=t.clientY-joy.cy,max=49;const l=Math.hypot(dx,dy);if(l>max){dx=dx/l*max;dy=dy/l*max}stick.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;joy.dx=dx/max;joy.dy=dy/max}
-function joyEnd(){joy.active=false;joy.dx=joy.dy=0;stick.style.transform='translate(-50%,-50%)'}
-joyEl.addEventListener('touchstart',e=>{e.preventDefault();joyStart(e)},{passive:false});joyEl.addEventListener('touchmove',e=>{e.preventDefault();for(const t of e.changedTouches)if(t.identifier===joy.id)moveJoy(t)},{passive:false});joyEl.addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===joy.id)joyEnd()});
-let last=performance.now();function loop(now){const dt=Math.min(.04,(now-last)/1000);last=now;if(!state.battle&&!state.enemy&&joy.active){state.px=Math.max(.05,Math.min(.95,state.px+(joy.dx||0)*dt*.32));state.py=Math.max(.08,Math.min(.92,state.py+(joy.dy||0)*dt*.32));checkEncounter()}draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-$('exploreBtn').onclick=()=>{const m=monsters[Math.random()*monsters.length|0];toast(m.boss?'遠處傳來沉重妖氣……':'山林深處傳來妖獸聲……')};
-updateHud();resize();
+function updateBattle(){if(!battle)return;document.getElementById('enemyHPbar').style.width=(battle.hp/battle.max*100)+'%';document.getElementById('playerHPbar').style.width=(S.hp/100*100)+'%';document.getElementById('enemyHP').textContent=`${Math.max(0,battle.hp)}/${battle.max}`;document.getElementById('playerHP').textContent=`${Math.max(0,S.hp)}/100`;}
+function enemyTurn(){let d=Math.max(2,battle.power-(S.power>120?3:0));if(defending)d=Math.floor(d/2);S.hp-=d;defending=false;document.getElementById('battleLog').textContent=`${battle.name} 攻擊，你受到 ${d} 傷害。`;if(S.hp<=0){S.hp=100;showModal('戰鬥失敗','你被迫撤回安全區。修為沒有損失。');leaveBattle();}}
+function attack(d,name){if(!battle)return;battle.hp-=d+Math.floor(S.power/30);document.getElementById('battleLog').textContent=`${name} 命中 ${battle.name}！`;if(battle.hp<=0){winBattle();return}enemyTurn();updateBattle();}
+function defend(){defending=true;document.getElementById('battleLog').textContent='你擺出防禦姿態，本回合受到的傷害降低。';enemyTurn();updateBattle();}
+function potion(){if((S.items.回氣丹||0)<=0){document.getElementById('battleLog').textContent='沒有回氣丹了。';return}S.items.回氣丹--;S.hp=Math.min(100,S.hp+30);document.getElementById('battleLog').textContent='使用回氣丹，恢復 30 HP。';enemyTurn();updateBattle();}
+function winBattle(){const b=battle;S.stone+=b.stone;addXP(b.xp);S.kills++;if(b.boss){S.boss=true;S.zone=1;if(S.quest===2)S.quest=3;S.equip.push('狼王戰甲');showModal('BOSS擊破！',`你擊敗了${b.name}<br>修為 +${b.xp}｜靈石 +${b.stone}<br>獲得：狼王戰甲`)}else{if(b.id==='crow')S.crowKills=(S.crowKills||0)+1;if(b.id==='boar')S.boarKills=(S.boarKills||0)+1;advanceQuest(b.id);showModal('戰鬥勝利',`擊敗 ${b.name}<br>修為 +${b.xp}｜靈石 +${b.stone}`)}save();updateBattle();}
+function advanceQuest(id){const q=quests[S.quest];if(!q)return;if(q.type==='kill'&&S.kills>=2)S.quest=1;if(q.type==='crow'&&(S.crowKills||0)>=3)S.quest=4;if(q.type==='boar'&&(S.boarKills||0)>=2)S.quest=5;if(S.quest===1&&!S.cultCount)S.cultCount=0;}
+function leaveBattle(){battle=null;document.getElementById('battle').classList.remove('active');document.getElementById('explore').classList.add('active');render();}
+function showModal(t,x){document.getElementById('modalTitle').textContent=t;document.getElementById('modalText').innerHTML=x;document.getElementById('modal').classList.add('show');render()}
+function closeModal(){document.getElementById('modal').classList.remove('show');if(!battle)render();}
+document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(n.dataset.go).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));n.classList.add('active');render()});
+document.getElementById('exploreBtn').onclick=()=>{const r=Math.random();if(r<.22)startBattle('boss');else if(r<.55)startBattle('crow');else if(r<.78)startBattle('boar');else startBattle('wolf')};
+document.querySelectorAll('.mob').forEach(m=>m.addEventListener('click',()=>startBattle(m.dataset.id)));
+document.getElementById('boss').addEventListener('click',()=>startBattle('boss'));
+
+// 虛擬搖桿：移動主角，靠近敵人時可直接觸發遭遇
+const joy=document.getElementById('joy'),knob=document.getElementById('knob'),actor=document.getElementById('actor');
+function moveJoy(x,y){const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=x-cx,dy=y-cy;const max=r.width*.32;const len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max}knob.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;const ar=actor.getBoundingClientRect(),mr=document.getElementById('map').getBoundingClientRect();let nx=ar.left+dx*.18,ny=ar.top+dy*.18;nx=Math.max(mr.left+25,Math.min(mr.right-25,nx));ny=Math.max(mr.top+80,Math.min(mr.bottom-100,ny));actor.style.left=((nx-mr.left)/mr.width*100)+'%';actor.style.top=((ny-mr.top)/mr.height*100)+'%';}
+joy.addEventListener('pointerdown',e=>{joy.setPointerCapture(e.pointerId);moveJoy(e.clientX,e.clientY)});
+joy.addEventListener('pointermove',e=>{if(e.buttons)moveJoy(e.clientX,e.clientY)});
+joy.addEventListener('pointerup',()=>knob.style.transform='translate(-50%,-50%)');
+render();
 </script>
 </body>
 </html>
