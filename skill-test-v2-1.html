@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>天命・破界｜V2.1 美術強化測試</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050713;touch-action:none}
+canvas{display:block;width:100%;height:100%}
+#hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);color:#dffaff;font:600 14px system-ui;letter-spacing:2px;text-shadow:0 0 12px #55eaff;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas><div id="hint">點擊畫面重新施放</div>
+<script>
+(()=> {
+const c=document.getElementById('c'),g=c.getContext('2d',{alpha:false});
+let W,H,D=1,start=performance.now();
+function resize(){D=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;g.setTransform(D,0,0,D,0,0)}
+addEventListener('resize',resize);resize();
+
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function glowText(s,size,y,a=1){
+ g.save();g.globalAlpha=a;g.textAlign='center';g.font=`700 ${size}px system-ui`;g.fillStyle='#ecfdff';g.shadowBlur=18;g.shadowColor='#55eaff';g.fillText(s,W/2,y);g.restore()
+}
+function sword(cx,cy,len,ang,scale=1,a=1){
+ g.save();g.translate(cx,cy);g.rotate(ang);g.globalAlpha=a;
+ // halo
+ g.shadowBlur=14;g.shadowColor='#51e8ff';
+ // blade
+ const L=len*scale;
+ let p=g.createLinearGradient(0,-L*.5,0,L*.45);
+ p.addColorStop(0,'#ffffff');p.addColorStop(.38,'#c9fbff');p.addColorStop(.72,'#69dff5');p.addColorStop(1,'#f6c95f');
+ g.fillStyle=p;g.beginPath();
+ g.moveTo(0,-L*.52);g.lineTo(L*.085,-L*.36);g.lineTo(L*.055,L*.31);g.lineTo(0,L*.48);g.lineTo(-L*.055,L*.31);g.lineTo(-L*.085,-L*.36);g.closePath();g.fill();
+ // central edge
+ g.shadowBlur=0;g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=1.2;
+ g.beginPath();g.moveTo(0,-L*.48);g.lineTo(0,L*.38);g.stroke();
+ // guard
+ g.strokeStyle='#ffd76b';g.lineWidth=Math.max(2,3*scale);g.beginPath();g.moveTo(-L*.14,L*.32);g.lineTo(L*.14,L*.32);g.stroke();
+ // handle
+ g.strokeStyle='#8a6b37';g.lineWidth=Math.max(3,5*scale);g.beginPath();g.moveTo(0,L*.34);g.lineTo(0,L*.47);g.stroke();
+ g.restore()
+}
+function rune(cx,cy,r,rot,a){
+ g.save();g.translate(cx,cy);g.rotate(rot);g.globalAlpha=a;g.strokeStyle='#64eaff';g.shadowBlur=10;g.shadowColor='#42dfff';g.lineWidth=1.5;
+ g.beginPath();for(let i=0;i<8;i++){let q=i*Math.PI/4;g.lineTo(Math.cos(q)*r,Math.sin(q)*r)}g.closePath();g.stroke();
+ g.strokeStyle='#f3ca61';g.beginPath();g.arc(0,0,r*.72,0,Math.PI*2);g.stroke();
+ g.restore()
+}
+function burst(cx,cy,p){
+ g.save();g.globalAlpha=.65*(1-p);g.strokeStyle='#8cefff';g.shadowBlur=18;g.shadowColor='#54eaff';g.lineWidth=2;
+ for(let i=0;i<5;i++){let r=(80+260*p)*(i+1)/5;g.beginPath();g.arc(cx,cy,r,0,Math.PI*2);g.stroke()}g.restore()
+}
+function frame(t){
+ const q=t%8.2,cx=W/2,cy=H*.46;
+ g.clearRect(0,0,W,H);
+ // simple stable background
+ let bg=g.createRadialGradient(cx,H*.42,10,cx,H*.42,Math.max(W,H)*.75);
+ bg.addColorStop(0,'#172747');bg.addColorStop(.48,'#0a1021');bg.addColorStop(1,'#02040b');g.fillStyle=bg;g.fillRect(0,0,W,H);
+ // mountain silhouettes
+ g.fillStyle='rgba(53,83,116,.28)';g.beginPath();g.moveTo(0,H*.62);g.lineTo(W*.2,H*.39);g.lineTo(W*.38,H*.59);g.lineTo(W*.55,H*.34);g.lineTo(W*.72,H*.58);g.lineTo(W*.9,H*.42);g.lineTo(W,H*.62);g.lineTo(W,H);g.lineTo(0,H);g.fill();
+
+ if(q<1.6){
+   let p=ease(q/1.6);rune(cx,cy,80+210*p,-q*.4,.9);
+   for(let i=0;i<8;i++){let a=i*Math.PI/4+q;g.strokeStyle='#61eaff';g.globalAlpha=.35;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(a)*(100+230*p),cy+Math.sin(a)*(70+170*p));g.stroke()}
+   glowText('靈氣匯聚',25,H*.77,p);
+ } else if(q<3.3){
+   let p=ease((q-1.6)/1.7);
+   rune(cx,cy,115+125*p,q*.18,.95);
+   for(let i=0;i<12;i++){let a=i*Math.PI/6+q*.2; sword(cx+Math.cos(a)*(115+90*p),cy+Math.sin(a)*(75+55*p),70,a+Math.PI/2,.62,.8)}
+   glowText('劍陣初成',25,H*.77,p);
+ } else if(q<5.0){
+   let p=ease((q-3.3)/1.7);
+   rune(cx,cy,170, -q*.25, .95);
+   for(let i=0;i<16;i++){let a=i*Math.PI/8+q*.3;sword(cx+Math.cos(a)*150,cy+Math.sin(a)*95,82,a+Math.PI/2,.68,.72)}
+   sword(cx,cy,Math.min(W,H)*.58,0,1.15,1);
+   glowText('萬劍歸宗',29,H*.77,p);
+ } else if(q<6.35){
+   let p=ease((q-5)/1.35);
+   // distinct divine sword + formation
+   rune(cx,cy,185, q*.22, 1);
+   for(let i=0;i<20;i++){let a=i*Math.PI/10+q*.5;sword(cx+Math.cos(a)*185,cy+Math.sin(a)*115,65,a+Math.PI/2,.55,.65)}
+   sword(cx,cy,Math.min(W,H)*.68,0,1.28,1);
+   glowText('劍來',31,H*.77,p);
+ } else if(q<7.1){
+   let p=ease((q-6.35)/.75);
+   // V2-style continuous final slash
+   g.save();g.translate(cx,cy);g.rotate(-.3);g.globalAlpha=.95;g.shadowBlur=28;g.shadowColor='#54eaff';
+   let sl=g.createLinearGradient(-W*.5,0,W*.5,0);
+   sl.addColorStop(0,'rgba(90,230,255,0)');sl.addColorStop(.45,'#dfffff');sl.addColorStop(.53,'#ffe99a');sl.addColorStop(1,'rgba(255,210,90,0)');
+   g.fillStyle=sl;g.beginPath();g.moveTo(-W*.5,-8);g.quadraticCurveTo(0,-48,W*.5,0);g.quadraticCurveTo(0,48,-W*.5,8);g.fill();g.restore();
+   burst(cx,cy,p);g.globalAlpha=.3*(1-p);g.fillStyle='#fff';g.fillRect(0,0,W,H);
+   glowText('天命・破界',31,H*.77,p);
+ } else {
+   let p=(q-7.1)/1.1;burst(cx,cy,p);glowText('一劍，破界。',25,H*.77,1-p*.75);
+ }
+ requestAnimationFrame(()=>frame((performance.now()-start)/1000))
+}
+function play(){start=performance.now();frame(0)}
+c.addEventListener('pointerdown',play,{passive:true});play();
+})();
+</script>
+</body></html>
