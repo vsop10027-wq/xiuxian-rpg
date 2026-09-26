@@ -3,142 +3,201 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>一枚玉佩｜Alpha 0.3</title>
+<title>一枚玉佩｜Alpha 0.4</title>
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;position:fixed;inset:0;background:#07111a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;overscroll-behavior:none}
+:root{--bg:#07121b;--panel:#0d1d2a;--line:#38566e;--gold:#d7a83d;--text:#eef5fb}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050c12;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
 body{touch-action:none}
-button{font:inherit}
-#app{position:fixed;inset:0;width:100%;height:100%;overflow:hidden}
-#hud{position:absolute;top:0;left:0;right:0;height:64px;padding:8px 12px;background:linear-gradient(#13283d,#0a1724);border-bottom:1px solid #45627e;z-index:20}
-.row{display:flex;justify-content:space-between;align-items:center}.title{font-size:16px;font-weight:700}.stat{font-size:12px;color:#cbdbea}.gold{color:#ffd66b}
-#map{position:absolute;left:0;right:0;top:64px;bottom:54px;overflow:hidden;background:
- radial-gradient(circle at 80% 18%,#345c51 0 8%,transparent 9%),
- linear-gradient(#164237,#0b2b22 60%,#082119)}
-#map:before{content:"";position:absolute;inset:0;opacity:.32;background:
- repeating-linear-gradient(25deg,transparent 0 48px,#174b39 49px 52px),
- repeating-linear-gradient(-35deg,transparent 0 72px,#0b3529 73px 76px)}
-.land{position:absolute;font-size:64px;filter:drop-shadow(0 8px 6px #0007);z-index:1}
-.l1{left:5%;top:10%}.l2{right:5%;top:17%;font-size:58px}.l3{left:18%;bottom:16%;font-size:54px}.l4{right:24%;bottom:13%;font-size:72px}
-#player{position:absolute;left:50%;top:51%;width:90px;height:120px;object-fit:contain;object-position:center;transform:translate(-50%,-50%);z-index:5;filter:drop-shadow(0 8px 8px #000);pointer-events:none}
-.mon{position:absolute;font-size:38px;z-index:4;filter:drop-shadow(0 5px 5px #000);pointer-events:none}.m1{left:25%;top:28%}.m2{left:70%;top:58%}.m3{left:20%;top:72%}
-#zone{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:#000b;border:1px solid #ffffff25;padding:7px 13px;border-radius:20px;font-size:12px;z-index:8;white-space:nowrap}
-#joystick{position:absolute;left:15px;bottom:15px;width:112px;height:112px;border-radius:50%;background:#ffffff12;border:2px solid #7da2ba88;z-index:10;touch-action:none}
-#stick{position:absolute;left:34px;top:34px;width:40px;height:40px;border-radius:50%;background:#84cbe0aa;border:2px solid #d8f5ff}
-#explore{position:absolute;right:15px;bottom:20px;width:76px;height:76px;border-radius:50%;border:2px solid #f3d06d;background:linear-gradient(#a27625,#60410f);color:#fff;font-weight:700;z-index:10}
-#bottom{position:absolute;left:0;right:0;bottom:0;height:54px;display:flex;background:#07111b;border-top:1px solid #40576d;z-index:30}
-#bottom button{flex:1;border:0;background:none;color:#b9c9d8;font-size:11px}.active{color:#ffe17b!important}
-.overlay{position:absolute;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
-.card{width:min(92vw,420px);max-height:calc(100% - 24px);overflow:auto;background:linear-gradient(#172b40,#0b1521);border:1px solid #607995;border-radius:18px;padding:18px;box-shadow:0 20px 60px #000}
-.card h2{margin:0 0 6px}.bossImg{display:block;width:145px;height:175px;object-fit:contain;margin:0 auto;filter:drop-shadow(0 8px 10px #000)}.desc{text-align:center;color:#d4e1ed;line-height:1.55;font-size:14px}
-.actions{display:flex;gap:10px;margin-top:14px}.actions button{flex:1;padding:12px;border-radius:12px;border:1px solid #607a95;background:#1d344a;color:#fff}.actions .main{background:#5c43d4}
-#battle{position:absolute;inset:0;background:radial-gradient(circle at 50% 18%,#2b506c,#07111a 72%);display:none;z-index:45;overflow:hidden;padding:12px}
-.brow{display:flex;justify-content:space-between;font-size:13px}.fighters{display:flex;justify-content:space-around;gap:10px;margin-top:10px}.fighter{width:45%;text-align:center}.portrait{height:145px;display:flex;align-items:center;justify-content:center}.portrait img{max-width:100%;max-height:140px;object-fit:contain;filter:drop-shadow(0 8px 10px #000)}.bar{height:9px;background:#263646;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:#63dc83}.enemy i{background:#ed6967}.dmg{height:26px;font-size:20px;font-weight:700;color:#ffd76c}.log{text-align:center;min-height:40px;color:#d8e5ef;font-size:13px}
-.skills{position:absolute;left:10px;right:10px;bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.skills button{padding:11px;border-radius:11px;border:1px solid #5b738c;background:#152a3f;color:#fff}.skills button:disabled{opacity:.45}
-#toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:#000d;padding:9px 13px;border-radius:12px;border:1px solid #ffffff22;display:none;z-index:80;white-space:nowrap}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;background:#07131d}
+#hud{height:74px;flex:none;background:linear-gradient(#102638,#0a1824);border-bottom:1px solid #34536a;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:8px 14px;z-index:5}
+.stat{text-align:center;font-weight:800;font-size:14px}.stat b{display:block;font-size:17px;color:#f5cf68;margin-top:2px}
+#gameWrap{position:relative;flex:1;min-height:0;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#topTag{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#071016e8;border:1px solid #496174;border-radius:22px;padding:9px 16px;font-size:14px;white-space:nowrap;z-index:3}
+#msg{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);background:#08131ddd;border:1px solid #50687a;border-radius:16px;padding:13px 18px;max-width:82%;text-align:center;font-size:15px;line-height:1.5;opacity:0;pointer-events:none;transition:.2s;z-index:7}
+#joystick{position:absolute;left:18px;bottom:20px;width:142px;height:142px;border-radius:50%;border:2px solid #537188;background:#163043aa;z-index:4}
+#stick{position:absolute;left:50%;top:50%;width:60px;height:60px;transform:translate(-50%,-50%);border-radius:50%;background:#77a9c2cc;border:2px solid #b8d9e6}
+#exploreBtn{position:absolute;right:18px;bottom:24px;width:112px;height:112px;border-radius:50%;border:2px solid #e2bd55;background:radial-gradient(circle at 35% 30%,#d5a63e,#69450c);color:white;font-size:18px;font-weight:900;z-index:4;box-shadow:0 8px 25px #0008}
+#hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:12px;color:#b9c9d4;z-index:3;white-space:nowrap}
+#battle{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#21455d,#091722 70%);display:none;z-index:10;flex-direction:column}
+#battleHead{padding:12px 14px;display:flex;justify-content:space-between;font-weight:800}
+.arena{position:relative;flex:1;min-height:0;overflow:hidden}
+.fog{position:absolute;inset:0;background:radial-gradient(circle at 30% 65%,#3a6b5c33 0 12%,transparent 13%),radial-gradient(circle at 75% 40%,#7c9eb733 0 14%,transparent 15%);pointer-events:none}
+.actor{position:absolute;width:140px;height:190px;display:flex;align-items:center;justify-content:center}
+#heroActor{left:9%;bottom:17%}#enemyActor{right:7%;top:15%}
+.nameplate{position:absolute;bottom:-18px;background:#07131ddd;border:1px solid #61798b;border-radius:10px;padding:5px 10px;white-space:nowrap;font-size:13px}
+.hpbox{position:absolute;width:155px;top:-35px;background:#07131dcc;border:1px solid #546d7e;border-radius:8px;padding:4px}.hpbar{height:8px;background:#3b4852;border-radius:5px;overflow:hidden}.hpfill{height:100%;background:#5dd987;width:100%}
+#enemyActor .hpfill{background:#ef6666}
+.sprite{position:relative;width:100px;height:140px}
+.heroBody{position:absolute;left:35px;top:32px;width:34px;height:72px;background:linear-gradient(90deg,#e8edf1 0 42%,#20344c 43%);border-radius:15px 15px 8px 8px;transform:skew(-5deg)}
+.heroHead{position:absolute;left:35px;top:13px;width:34px;height:35px;border-radius:50%;background:#f0c7a8;border:5px solid #182432}
+.hair{position:absolute;left:31px;top:8px;width:43px;height:27px;background:#101820;border-radius:55% 45% 35% 35%;transform:rotate(-7deg)}
+.sword{position:absolute;left:64px;top:56px;width:72px;height:7px;background:linear-gradient(90deg,#a9e8ff,#fff);transform:rotate(-40deg);box-shadow:0 0 12px #54caff}
+.wolfBody{position:absolute;left:14px;top:55px;width:90px;height:55px;background:linear-gradient(#27313a,#111820);border-radius:48% 55% 42% 40%;box-shadow:0 0 18px #ff313344}
+.wolfHead{position:absolute;left:0;top:34px;width:52px;height:45px;background:#1c252d;clip-path:polygon(0 50%,20% 15%,38% 28%,55% 5%,72% 28%,100% 48%,72% 88%,34% 92%);filter:drop-shadow(0 0 6px #f22)}
+.eye{position:absolute;width:7px;height:7px;border-radius:50%;background:#ff4d45;box-shadow:0 0 8px #f33}.e1{left:26px;top:53px}.e2{left:42px;top:51px}
+.claw{position:absolute;right:4px;top:95px;width:24px;height:8px;background:#aab3ba;transform:rotate(15deg)}
+#skills{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:10px 14px 14px;background:#06111ae8;border-top:1px solid #385064}
+.skill{height:52px;border:1px solid #5b7690;border-radius:13px;background:#142b43;color:white;font-size:16px;font-weight:800}.skill:active{transform:scale(.98);background:#1d3d5d}
+#result{position:absolute;inset:0;background:#07131df2;display:none;align-items:center;justify-content:center;z-index:20}
+.resultCard{width:min(86%,360px);border:1px solid #806b39;border-radius:20px;background:linear-gradient(#15293a,#09131d);padding:24px;text-align:center;box-shadow:0 15px 50px #0009}.resultCard h2{margin:0 0 10px;color:#f3cf6b}.loot{margin:15px 0;padding:12px;background:#0a1823;border-radius:12px}.gold{color:#f3cf6b;font-weight:900}
+#backBtn{margin-top:10px;width:100%;height:48px;border-radius:12px;border:1px solid #8b6b31;background:#63470e;color:#fff;font-weight:900}
+@media(max-height:650px){#hud{height:64px}.actor{transform:scale(.82)}#joystick{width:120px;height:120px}#stick{width:52px;height:52px}#exploreBtn{width:94px;height:94px}.skill{height:46px}}
 </style>
 </head>
 <body>
 <div id="app">
-<header id="hud">
-  <div class="row"><span class="title">一枚玉佩，改變少年命運</span><b id="realm">凡人</b></div>
-  <div class="row stat"><span>修為 <b id="xp">0</b></span><span>靈石 <b id="gold">100</b></span><span>戰力 <b id="power">100</b></span></div>
-</header>
-
-<main id="map">
-  <div id="zone">青雲山脈・自由探索</div>
-  <div class="land l1">⛰️</div><div class="land l2">🌲</div><div class="land l3">🌲</div><div class="land l4">⛰️</div>
-  <div class="mon m1">🐺</div><div class="mon m2">🦅</div><div class="mon m3">🐗</div>
-  <img id="player" src="assets/主角.png" alt="少年主角">
-  <div id="joystick"><div id="stick"></div></div>
-  <button id="explore">探索</button>
-  <div id="toast"></div>
-
-  <div class="overlay" id="encounter">
-    <section class="card">
-      <h2 id="encTitle">妖獸出現！</h2>
-      <img id="bossImg" class="bossImg" alt="Boss">
-      <div class="desc" id="encDesc"></div>
-      <div class="actions"><button id="avoid">避開</button><button class="main" id="fight">迎戰</button></div>
-    </section>
+  <div id="hud">
+    <div class="stat">境界<b id="realm">凡人</b></div>
+    <div class="stat">修為<b id="xp">0</b></div>
+    <div class="stat">靈石<b id="stone">100</b></div>
   </div>
+  <div id="gameWrap">
+    <canvas id="map"></canvas>
+    <div id="topTag">青雲山脈・自由探索</div>
+    <div id="msg"></div>
+    <div id="joystick"><div id="stick"></div></div>
+    <button id="exploreBtn">探索</button>
+    <div id="hint">拖動左下搖桿移動少年・靠近妖獸會觸發遭遇</div>
 
-  <section id="battle">
-    <div class="brow"><span>⚔️ 戰鬥</span><span id="round">第 1 回合</span></div>
-    <div class="fighters">
-      <div class="fighter"><div class="portrait"><img id="pimg" src="assets/主角.png"></div><div class="dmg" id="pdmg"></div><div class="bar"><i id="php"></i></div><small>少年 HP <span id="phpText">100/100</span></small></div>
-      <div class="fighter"><div class="portrait"><img id="eimg"></div><div class="dmg" id="edmg"></div><div class="bar enemy"><i id="ehp"></i></div><small id="ename">妖獸</small></div>
+    <div id="battle">
+      <div id="battleHead"><span>⚔ 戰鬥</span><span id="turn">第 1 回合</span></div>
+      <div class="arena">
+        <div class="fog"></div>
+        <div class="actor" id="heroActor">
+          <div class="hpbox"><div class="hpbar"><div id="heroHpFill" class="hpfill"></div></div><span id="heroHpText"></span></div>
+          <div class="sprite"><div class="hair"></div><div class="heroHead"></div><div class="heroBody"></div><div class="sword"></div></div>
+          <div class="nameplate">少年・玉佩持有者</div>
+        </div>
+        <div class="actor" id="enemyActor">
+          <div class="hpbox"><div class="hpbar"><div id="enemyHpFill" class="hpfill"></div></div><span id="enemyHpText"></span></div>
+          <div class="sprite"><div class="wolfBody"></div><div class="wolfHead"></div><div class="eye e1"></div><div class="eye e2"></div><div class="claw"></div></div>
+          <div class="nameplate" id="enemyName">黑甲狼</div>
+        </div>
+      </div>
+      <div id="skills">
+        <button class="skill" data-skill="slash">青冥斬</button>
+        <button class="skill" data-skill="burst">劍氣爆發</button>
+        <button class="skill" data-skill="guard">防禦</button>
+        <button class="skill" data-skill="pill">回氣丹</button>
+      </div>
     </div>
-    <div class="log" id="battleLog">選擇招式。</div>
-    <div class="skills"><button data-s="slash">青冥斬</button><button data-s="burst">劍氣爆發</button><button data-s="def">防禦</button><button data-s="potion">回氣丹</button></div>
-  </section>
-</main>
 
-<nav id="bottom">
-  <button class="active">🗺️<br>探索</button>
-  <button onclick="toast('修煉：戰鬥會獲得修為。')">✨<br>修煉</button>
-  <button onclick="toast('背包：Boss 掉落裝備會自動收藏。')">🎒<br>背包</button>
-  <button onclick="toast('劇情：玉佩的秘密還在等你發現。')">📖<br>劇情</button>
-</nav>
+    <div id="result">
+      <div class="resultCard">
+        <h2 id="resultTitle">戰鬥勝利</h2>
+        <div id="resultText"></div>
+        <div class="loot"><div class="gold" id="lootText"></div></div>
+        <button id="backBtn">返回探索</button>
+      </div>
+    </div>
+  </div>
 </div>
-
 <script>
-const BOSS={
-"01_黑甲狼王.png":"assets/01_黑甲狼王.png","02_血羽妖鴉王.png":"assets/02_血羽妖鴉王.png",
-"03_玄岩魔猿王.png":"assets/03_玄岩魔猿王.png","04_月影蛇姬.png":"assets/04_月影蛇姬.png",
-"05_赤炎妖王.png":"assets/05_赤炎妖王.png","06_九幽龍君.png":"assets/06_九幽龍君.png",
-"07_天雷古獸.png":"assets/07_天雷古獸.png","08_玉佩守護神.png":"assets/08_玉佩守護神.png"};
-const bosses=[
-["黑甲狼王","01_黑甲狼王.png",180,38,130,90,"狼王戰甲"],["血羽妖鴉王","02_血羽妖鴉王.png",210,44,160,110,"血羽披風"],
-["玄岩魔猿王","03_玄岩魔猿王.png",250,50,200,140,"玄岩重甲"],["月影蛇姬","04_月影蛇姬.png",290,58,240,170,"月影仙衣"],
-["赤炎妖王","05_赤炎妖王.png",330,66,300,210,"赤炎魔劍"],["九幽龍君","06_九幽龍君.png",400,78,420,300,"九幽龍魂劍"],
-["天雷古獸","07_天雷古獸.png",480,92,600,420,"雷霆神劍"],["玉佩守護神","08_玉佩守護神.png",600,110,900,666,"玉佩・天命"]];
-const ordinary=[["黑甲狼","🐺",60,16,25,18],["血羽妖鴉","🦅",75,19,32,23],["玄岩妖獸","🐗",95,24,45,32]];
-let state=JSON.parse(localStorage.getItem("alpha03")||'{"xp":0,"gold":100,"power":100,"realm":"凡人"}');
-let enemy=null,battleOn=false,defending=false,turn=1;
+const canvas=document.getElementById('map'),ctx=canvas.getContext('2d');
 const $=id=>document.getElementById(id);
-function save(){localStorage.setItem("alpha03",JSON.stringify(state));update()}
-function update(){$("xp").textContent=state.xp;$("gold").textContent=state.gold;$("power").textContent=state.power;$("realm").textContent=state.realm}
-function toast(t){const x=$("toast");x.textContent=t;x.style.display="block";clearTimeout(window._t);window._t=setTimeout(()=>x.style.display="none",1400)}
-function openEncounter(){
- if(battleOn)return;
- const boss=Math.random()<.25;
- if(boss){const b=bosses[Math.floor(Math.random()*bosses.length)];enemy={name:b[0],file:b[1],hp:b[2],maxHp:b[2],power:b[3],xp:b[4],gold:b[5],drop:b[6],boss:true}}
- else{const m=ordinary[Math.floor(Math.random()*ordinary.length)];enemy={name:m[0],icon:m[1],hp:m[2],maxHp:m[2],power:m[3],xp:m[4],gold:m[5],boss:false}}
- $("encTitle").textContent=enemy.boss?"⚠️ Boss 妖氣逼近！":"妖獸出現！";
- $("encDesc").textContent=enemy.boss?`${enemy.name} 擋住了你的去路。可以迎戰，也可以避開。`:`${enemy.name} 出現在附近。`;
- $("bossImg").style.display=enemy.boss?"block":"none";if(enemy.boss)$("bossImg").src=BOSS[enemy.file];
- $("encounter").style.display="flex";
+let W=0,H=0,dpr=1;
+const state={xp:0,stone:100,realm:'凡人',hp:100,maxHp:100,px:.50,py:.55,enemy:null,battle:false,turn:1,guard:false};
+const monsters=[
+ {id:'wolf',name:'黑甲狼',x:.31,y:.34,hp:70,max:70,atk:8,boss:false},
+ {id:'boar',name:'山嶽獠牙獸',x:.23,y:.73,hp:82,max:82,atk:10,boss:false},
+ {id:'crow',name:'血羽妖鴉',x:.73,y:.57,hp:64,max:64,atk:11,boss:false},
+ {id:'boss',name:'黑甲狼王',x:.78,y:.25,hp:150,max:150,atk:16,boss:true}
+];
+function resize(){dpr=Math.min(devicePixelRatio||1,2);W=canvas.clientWidth;H=canvas.clientHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+addEventListener('resize',resize);
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0b3b34');g.addColorStop(1,'#06251f');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ // terrain
+ for(let y=0;y<H;y+=46)for(let x=0;x<W;x+=46){ctx.strokeStyle='rgba(75,150,130,.11)';ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+46,y+22);ctx.stroke()}
+ // river
+ ctx.strokeStyle='#267b78aa';ctx.lineWidth=28;ctx.beginPath();ctx.moveTo(W*.62,-20);ctx.bezierCurveTo(W*.46,H*.25,W*.82,H*.55,W*.56,H+20);ctx.stroke();
+ // rocks/trees
+ drawTree(W*.83,H*.18,1.05);drawTree(W*.17,H*.80,.9);drawTree(W*.92,H*.62,.8);
+ drawMountain(W*.12,H*.16,1);drawMountain(W*.67,H*.83,.85);
+ // shrine / boss zone
+ ctx.fillStyle='rgba(190,75,70,.13)';ctx.beginPath();ctx.arc(W*.78,H*.25,54,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#c77761aa';ctx.setLineDash([5,5]);ctx.beginPath();ctx.arc(W*.78,H*.25,54,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+ ctx.fillStyle='#e8b36a';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText('妖氣區',W*.78,H*.25-62);
+ monsters.forEach(m=>{if(!state.enemy||state.enemy.id!==m.id) drawMonster(m)});
+ drawHero(W*state.px,H*state.py);
 }
-$("explore").onclick=openEncounter;
-$("avoid").onclick=()=>{$("encounter").style.display="none";toast("你避開了這次遭遇。")};
-$("fight").onclick=()=>{$("encounter").style.display="none";startBattle()};
-function startBattle(){battleOn=true;turn=1;defending=false;state.hp=100;$("battle").style.display="block";$("pimg").src="assets/主角.png";$("eimg").src=enemy.boss?BOSS[enemy.file]:"";$("eimg").style.display=enemy.boss?"block":"none";$("ename").textContent=enemy.name+(enemy.boss?" 👑":"");$("battleLog").textContent="選擇招式。";render()}
-function render(){$("php").style.width=state.hp+"%";$("phpText").textContent=state.hp+"/100";$("ehp").style.width=Math.max(0,enemy.hp/enemy.maxHp*100)+"%";$("round").textContent="第 "+turn+" 回合"}
-function lock(v){document.querySelectorAll(".skills button").forEach(b=>b.disabled=v)}
-document.querySelectorAll(".skills button").forEach(b=>b.onclick=()=>skill(b.dataset.s));
-function skill(s){
- if(!battleOn)return;lock(true);$("pdmg").textContent="";$("edmg").textContent="";
- if(s==="potion"){state.hp=Math.min(100,state.hp+35);$("battleLog").textContent="回氣丹生效，恢復 35 HP。"}
- else if(s==="def"){defending=true;$("battleLog").textContent="你架起劍勢，下一次傷害降低。"}
- else{const dmg=s==="burst"?35+Math.floor(Math.random()*16):20+Math.floor(Math.random()*10);enemy.hp=Math.max(0,enemy.hp-dmg);$("edmg").textContent="-"+dmg;$("battleLog").textContent=s==="burst"?"劍氣爆發！":"青冥斬命中！";if(enemy.hp<=0){win();return}}
- render();setTimeout(enemyTurn,450)
+function drawTree(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#754a2d';ctx.fillRect(-5,12,10,28);ctx.fillStyle='#26774b';for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(0,-42+i*17);ctx.lineTo(-25+i*4,14+i*8);ctx.lineTo(25-i*4,14+i*8);ctx.closePath();ctx.fill()}ctx.restore()}
+function drawMountain(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='#3d625f';ctx.beginPath();ctx.moveTo(-55,40);ctx.lineTo(0,-48);ctx.lineTo(55,40);ctx.closePath();ctx.fill();ctx.fillStyle='#b8d4cc';ctx.beginPath();ctx.moveTo(-20,-16);ctx.lineTo(0,-48);ctx.lineTo(19,-15);ctx.lineTo(8,-22);ctx.lineTo(0,-4);ctx.closePath();ctx.fill();ctx.restore()}
+function drawHero(x,y){
+ ctx.save();ctx.translate(x,y);
+ ctx.shadowBlur=12;ctx.shadowColor='#7bd5ff88';
+ ctx.fillStyle='#e9c0a4';ctx.beginPath();ctx.arc(0,-20,10,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#111821';ctx.beginPath();ctx.arc(0,-23,12,Math.PI,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#dfe8ee';ctx.beginPath();ctx.roundRect(-10,-10,20,31,6);ctx.fill();
+ ctx.fillStyle='#243b55';ctx.fillRect(0,-10,10,31);
+ ctx.strokeStyle='#c9f1ff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(9,-2);ctx.lineTo(28,-25);ctx.stroke();
+ ctx.fillStyle='#5cc8ff';ctx.beginPath();ctx.arc(0,10,4,0,Math.PI*2);ctx.fill();
+ ctx.restore();
 }
-function enemyTurn(){let dmg=Math.max(4,enemy.power-Math.floor(state.power/6)+Math.floor(Math.random()*8));if(defending){dmg=Math.floor(dmg*.35);defending=false}state.hp=Math.max(0,state.hp-dmg);$("pdmg").textContent="-"+dmg;if(state.hp<=0){$("battleLog").textContent="你敗退了。";setTimeout(()=>{$("battle").style.display="none";battleOn=false;state.hp=100;save();toast("你安全撤退了。")},700);return}$("battleLog").textContent=`${enemy.name} 攻擊，造成 ${dmg} 傷害。`;turn++;render();setTimeout(()=>lock(false),250)}
-function win(){state.xp+=enemy.xp;state.gold+=enemy.gold;state.power+=enemy.boss?12:4;if(state.xp>=1000)state.realm="金丹初期";else if(state.xp>=700)state.realm="築基後期";else if(state.xp>=500)state.realm="築基中期";else if(state.xp>=300)state.realm="築基初期";else if(state.xp>=150)state.realm="練氣九層";else if(state.xp>=50)state.realm="練氣三層";else state.realm="凡人";$("battleLog").textContent=`勝利！+${enemy.xp} 修為、+${enemy.gold} 靈石${enemy.boss?"，掉落「"+enemy.drop+"」":""}。`;save();render();setTimeout(()=>{$("battle").style.display="none";battleOn=false;lock(false);toast(enemy.boss?"Boss 掉落："+enemy.drop:"獲得戰利品")},1100)}
-update();
-
-/* 鎖定手機可視區域，避免 iPhone 預覽產生整頁捲軸 */
-function fit(){const vv=window.visualViewport;const h=vv?vv.height:window.innerHeight;document.documentElement.style.height=h+"px";document.body.style.height=h+"px";$("app").style.height=h+"px"}
-window.addEventListener("resize",fit);window.addEventListener("orientationchange",()=>setTimeout(fit,150));if(window.visualViewport)visualViewport.addEventListener("resize",fit);fit();
-
-/* 搖桿：第一階段先控制視角位置，之後再接地圖碰撞 */
-const joy=$("joystick"),stick=$("stick");let active=false,jx=0,jy=0;
-function moveJoy(e){const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),m=38;if(d>m){dx*=m/d;dy*=m/d}stick.style.transform=`translate(${dx}px,${dy}px)`;jx=dx/m;jy=dy/m}
-joy.addEventListener("pointerdown",e=>{active=true;joy.setPointerCapture(e.pointerId);moveJoy(e)});
-joy.addEventListener("pointermove",e=>{if(active)moveJoy(e)});
-joy.addEventListener("pointerup",()=>{active=false;jx=jy=0;stick.style.transform="translate(0,0)"});
+function drawMonster(m){
+ const x=W*m.x,y=H*m.y;ctx.save();ctx.translate(x,y);
+ if(m.id==='crow'){ctx.fillStyle='#202b39';ctx.beginPath();ctx.ellipse(0,0,24,14,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#a7b7c8';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-5,0);ctx.lineTo(-32,-18);ctx.moveTo(5,0);ctx.lineTo(31,-18);ctx.stroke();ctx.fillStyle='#d8b24c';ctx.beginPath();ctx.moveTo(20,1);ctx.lineTo(34,6);ctx.lineTo(20,9);ctx.fill()}
+ else {ctx.fillStyle=m.boss?'#15171c':'#5b5149';ctx.beginPath();ctx.ellipse(0,4,m.boss?37:26,m.boss?25:19,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=m.boss?'#272b33':'#6c6259';ctx.beginPath();ctx.moveTo(-18,-4);ctx.lineTo(-37,-24);ctx.lineTo(-29,-29);ctx.lineTo(-10,-14);ctx.closePath();ctx.fill();ctx.fillStyle='#f24c45';ctx.beginPath();ctx.arc(17,-3,4,0,Math.PI*2);ctx.fill();if(m.boss){ctx.strokeStyle='#bd5a4f';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,5,40,0,Math.PI*2);ctx.stroke()}}
+ ctx.fillStyle='#f1c65a';ctx.font='bold 11px sans-serif';ctx.textAlign='center';ctx.fillText(m.boss?'BOSS':m.name,x*0+0,44);ctx.restore();
+}
+function updateHud(){$('xp').textContent=state.xp;$('stone').textContent=state.stone;$('realm').textContent=state.xp>=60?'練氣二層':state.xp>=30?'練氣一層':'凡人'}
+function toast(t){$('msg').textContent=t;$('msg').style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>$('msg').style.opacity=0,1800)}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+function checkEncounter(){
+ const p={x:state.px,y:state.py};
+ for(const m of monsters){if(dist(p,m)<.075){startEncounter(m);return}}
+}
+function startEncounter(m){
+ if(state.battle)return;
+ state.enemy={...m};state.battle=true;
+ if(m.boss){toast('前方妖氣暴漲……你發現了黑甲狼王！');setTimeout(()=>openBattle(m),450)}
+ else {toast('你接近了 '+m.name+'，妖獸發現了你！');setTimeout(()=>openBattle(m),450)}
+}
+function openBattle(m){
+ $('battle').style.display='flex';$('enemyName').textContent=m.name+(m.boss?' ・ BOSS':'');state.turn=1;state.hp=Math.max(1,state.hp);state.guard=false;renderBattle()
+}
+function renderBattle(){
+ const e=state.enemy;$('heroHpFill').style.width=(state.hp/state.maxHp*100)+'%';$('heroHpText').textContent='少年 HP '+state.hp+'/'+state.maxHp;
+ $('enemyHpFill').style.width=(e.hp/e.max*100)+'%';$('enemyHpText').textContent=e.name+' HP '+e.hp+'/'+e.max;
+ $('turn').textContent='第 '+state.turn+' 回合';
+}
+function enemyTurn(){
+ const e=state.enemy;let dmg=e.atk+(Math.random()*5|0);if(state.guard)dmg=Math.max(1,Math.floor(dmg*.35));state.hp=Math.max(0,state.hp-dmg);state.guard=false;toast(e.name+' 發動攻擊，造成 '+dmg+' 傷害。');renderBattle();if(state.hp<=0)endBattle(false)
+}
+function playerSkill(s){
+ if(!state.enemy)return;
+ let dmg=0;
+ if(s==='slash')dmg=18+(Math.random()*7|0);
+ if(s==='burst')dmg=32+(Math.random()*10|0);
+ if(s==='guard'){state.guard=true;toast('你架起青冥劍，準備抵擋下一擊。');state.turn++;setTimeout(enemyTurn,550);return}
+ if(s==='pill'){state.hp=Math.min(state.maxHp,state.hp+28);toast('服下回氣丹，恢復 28 HP。');state.turn++;renderBattle();setTimeout(enemyTurn,550);return}
+ state.enemy.hp=Math.max(0,state.enemy.hp-dmg);toast((s==='burst'?'劍氣爆發！':'青冥斬！')+' 造成 '+dmg+' 傷害。');renderBattle();
+ if(state.enemy.hp<=0){setTimeout(()=>endBattle(true),500);return}
+ state.turn++;setTimeout(enemyTurn,550)
+}
+document.querySelectorAll('.skill').forEach(b=>b.addEventListener('click',()=>playerSkill(b.dataset.skill)));
+function endBattle(win){
+ $('battle').style.display='none';$('result').style.display='flex';
+ if(win){
+  const e=state.enemy,reward=e.boss?80:25;state.xp+=reward;state.stone+=e.boss?60:12;state.hp=Math.max(1,state.hp);
+  $('resultTitle').textContent=e.boss?'BOSS擊破！':'戰鬥勝利！';$('resultText').innerHTML='你擊敗了 <b>'+e.name+'</b>。<br>修為 +'+reward+'　靈石 +'+(e.boss?60:12);
+  $('lootText').textContent=e.boss?'獲得：狼王戰甲・Boss 戰利品':'獲得：妖獸材料 ×1';
+ }else{$('resultTitle').textContent='戰鬥失敗';$('resultText').textContent='少年倒下了……回到探索區。';$('lootText').textContent='沒有獲得戰利品。';state.hp=100}
+ updateHud()
+}
+$('backBtn').onclick=()=>{$('result').style.display='none';state.enemy=null;state.battle=false;state.hp=Math.max(1,state.hp);draw()};
+let joy={active:false,id:null,cx:0,cy:0};
+const joyEl=$('joystick'),stick=$('stick');
+function joyStart(e){const t=e.changedTouches[0];joy.active=true;joy.id=t.identifier;const r=joyEl.getBoundingClientRect();joy.cx=r.left+r.width/2;joy.cy=r.top+r.height/2;moveJoy(t)}
+function moveJoy(t){if(!joy.active)return;let dx=t.clientX-joy.cx,dy=t.clientY-joy.cy,max=49;const l=Math.hypot(dx,dy);if(l>max){dx=dx/l*max;dy=dy/l*max}stick.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;joy.dx=dx/max;joy.dy=dy/max}
+function joyEnd(){joy.active=false;joy.dx=joy.dy=0;stick.style.transform='translate(-50%,-50%)'}
+joyEl.addEventListener('touchstart',e=>{e.preventDefault();joyStart(e)},{passive:false});joyEl.addEventListener('touchmove',e=>{e.preventDefault();for(const t of e.changedTouches)if(t.identifier===joy.id)moveJoy(t)},{passive:false});joyEl.addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===joy.id)joyEnd()});
+let last=performance.now();function loop(now){const dt=Math.min(.04,(now-last)/1000);last=now;if(!state.battle&&!state.enemy&&joy.active){state.px=Math.max(.05,Math.min(.95,state.px+(joy.dx||0)*dt*.32));state.py=Math.max(.08,Math.min(.92,state.py+(joy.dy||0)*dt*.32));checkEncounter()}draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+$('exploreBtn').onclick=()=>{const m=monsters[Math.random()*monsters.length|0];toast(m.boss?'遠處傳來沉重妖氣……':'山林深處傳來妖獸聲……')};
+updateHud();resize();
 </script>
 </body>
 </html>
