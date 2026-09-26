@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>天命・破界 V2｜修仙終極奧義</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02050b;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
+canvas{width:100%;height:100%;display:block}
+#ui{position:fixed;inset:0;pointer-events:none;text-align:center}
+.title{margin-top:25px;font-size:25px;font-weight:900;letter-spacing:4px;text-shadow:0 0 10px #d9f99d,0 0 28px #67e8f9}
+.sub{font-size:12px;opacity:.7;margin-top:4px;letter-spacing:2px}
+#cast{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);pointer-events:auto;border:1px solid #a7f3d0;border-radius:999px;padding:15px 30px;color:#fff;font-size:18px;font-weight:900;background:linear-gradient(180deg,#183b35,#071b1b);box-shadow:0 0 25px #2dd4bf,inset 0 0 20px #0f766e;touch-action:manipulation}
+#cast:active{transform:translateX(-50%) scale(.96)}
+#chant{position:absolute;left:0;right:0;top:43%;font-size:27px;font-weight:900;letter-spacing:6px;opacity:0;text-shadow:0 0 12px #fff,0 0 30px #67e8f9}
+#dmg{position:absolute;left:0;right:0;top:46%;font-size:44px;font-weight:900;opacity:0;text-shadow:0 0 10px #fff,0 0 30px #facc15,0 0 60px #ef4444}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+<div class="title">天命・破界</div>
+<div class="sub">終極奧義 · 天命玉佩 · 萬劍歸宗</div>
+<div id="chant"></div>
+<div id="dmg">999,999,999</div>
+<button id="cast">⚔ 施放天命・破界</button>
+</div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d'),btn=document.getElementById('cast'),chant=document.getElementById('chant'),dmg=document.getElementById('dmg');
+let W,H,dpr=1,stars=[],qi=[],swords=[],bolts=[],rings=[],run=false,t0=0,shake=0,flash=0,slow=1,finished=false;
+function size(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',size);size();
+const R=(a,b)=>a+Math.random()*(b-a), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function particle(a,b,col,n=1,sp=4){
+ for(let i=0;i<n;i++){let q=Math.random()*Math.PI*2,s=R(.5,sp);qi.push({x:a,y:b,vx:Math.cos(q)*s,vy:Math.sin(q)*s,r:R(1,3.8),life:R(35,95),max:95,col})}
+}
+function ring(a,b,max,col){rings.push({x:a,y:b,r:5,max,life:35,col})}
+function bolt(x1,y1,x2,y2){let p=[{x:x1,y:y1}];for(let i=1;i<14;i++){let t=i/14;p.push({x:x1+(x2-x1)*t+R(-28,28),y:y1+(y2-y1)*t+R(-18,18)})}p.push({x:x2,y:y2});bolts.push({p,life:18})}
+function reset(){stars=[];qi=[];swords=[];bolts=[];rings=[];shake=0;flash=0;slow=1;finished=false;chant.style.opacity=0;dmg.style.opacity=0}
+for(let i=0;i<110;i++)stars.push({x:Math.random(),y:Math.random(),s:R(.5,2.2),a:R(.2,1)});
+function bg(t){
+ let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#02030a');g.addColorStop(.45,'#07162a');g.addColorStop(1,'#02060a');x.fillStyle=g;x.fillRect(0,0,W,H);
+ for(const s of stars){x.globalAlpha=s.a;x.fillStyle='#dffaff';x.fillRect(s.x*W,s.y*H,s.s,s.s)}x.globalAlpha=1;
+}
+function daoYun(t){
+ let cx=W/2,cy=H*.48,rx=W*.39,ry=H*.25;
+ x.save();x.globalAlpha=.17;x.strokeStyle='#5eead4';x.lineWidth=2;
+ for(let k=0;k<7;k++){x.beginPath();for(let i=0;i<100;i++){let a=i/99*Math.PI*2,px=cx+Math.cos(a+t*.0002+k)*rx*(.6+.06*Math.sin(k+a*3)),py=cy+Math.sin(a)*ry*(.6+.05*Math.cos(k+a*2));i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke()}x.restore();
+}
+function talisman(cx,cy,r,t){
+ x.save();x.translate(cx,cy);x.rotate(t*.00015);x.shadowBlur=25;x.shadowColor='#a7f3d0';
+ for(let k=0;k<4;k++){x.strokeStyle=k%2?'rgba(250,204,21,.65)':'rgba(103,232,249,.8)';x.lineWidth=2+k%2;x.beginPath();x.arc(0,0,r-k*18,0,Math.PI*2);x.stroke()}
+ x.strokeStyle='#fde68a';x.lineWidth=1;for(let i=0;i<8;i++){x.rotate(Math.PI/4);x.beginPath();x.moveTo(r-35,0);x.lineTo(r,0);x.stroke()}
+ x.restore();
+}
+function jade(cx,cy,t){
+ x.save();x.translate(cx,cy);x.rotate(Math.sin(t*.003)*.15);x.shadowBlur=35;x.shadowColor='#34d399';
+ x.fillStyle='#9fffe0';x.beginPath();x.moveTo(0,-25);x.lineTo(18,0);x.lineTo(0,25);x.lineTo(-18,0);x.closePath();x.fill();x.strokeStyle='#ecfdf5';x.lineWidth=2;x.stroke();x.restore();
+}
+function hero(t){
+ let cx=W/2,cy=H*.78;x.save();x.translate(cx,cy);x.shadowBlur=18;x.shadowColor='#67e8f9';
+ x.strokeStyle='#a5f3fc';x.lineWidth=4;x.beginPath();x.moveTo(0,-55);x.lineTo(0,25);x.moveTo(0,-5);x.lineTo(-27,20);x.moveTo(0,-5);x.lineTo(27,20);x.moveTo(0,25);x.lineTo(-16,58);x.moveTo(0,25);x.lineTo(16,58);x.stroke();
+ x.fillStyle='#ecfeff';x.beginPath();x.arc(0,-72,17,0,Math.PI*2);x.fill();
+ if(run){x.strokeStyle='#fef3c7';x.lineWidth=5;x.beginPath();x.moveTo(22,10);x.lineTo(65,-45);x.stroke()}
+ x.restore();
+}
+function boss(t){
+ let cx=W/2,cy=H*.27,r=52+Math.sin(t*.004)*3;x.save();x.translate(cx,cy);
+ x.shadowBlur=35;x.shadowColor='#ef4444';x.fillStyle='#160b1a';x.beginPath();x.arc(0,0,r,0,Math.PI*2);x.fill();
+ x.strokeStyle='#ef4444';x.lineWidth=4;x.beginPath();x.arc(0,0,r+8,0,Math.PI*2);x.stroke();
+ x.fillStyle='#fca5a5';x.beginPath();x.arc(-19,-6,6,0,Math.PI*2);x.arc(19,-6,6,0,Math.PI*2);x.fill();
+ x.strokeStyle='#7f1d1d';x.lineWidth=8;for(let i=0;i<6;i++){let a=i*Math.PI/3;x.beginPath();x.moveTo(Math.cos(a)*r,Math.sin(a)*r);x.lineTo(Math.cos(a)*(r+32),Math.sin(a)*(r+32));x.stroke()}x.restore();
+}
+function sword(cx,cy,a,len,alpha){
+ x.save();x.translate(cx,cy);x.rotate(a);x.globalAlpha=alpha;x.shadowBlur=22;x.shadowColor='#a5f3fc';x.strokeStyle='#e0f2fe';x.lineWidth=5;x.beginPath();x.moveTo(0,-len);x.lineTo(0,len*.15);x.stroke();x.strokeStyle='#facc15';x.lineWidth=2;x.beginPath();x.moveTo(-7,0);x.lineTo(7,0);x.stroke();x.restore();
+}
+function update(t){
+ let dt=Math.min(2,(t-(update.last||t))/16.67)*slow;update.last=t;
+ qi.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.985;p.vy*=.985;p.life-=dt});qi=qi.filter(p=>p.life>0);
+ bolts.forEach(b=>b.life-=dt);bolts=bolts.filter(b=>b.life>0);
+ rings.forEach(r=>{r.r+=(r.max-r.r)*.18*dt;r.life-=dt});rings=rings.filter(r=>r.life>0);
+ shake*=.86;flash*=.82;
+}
+function render(t){
+ update(t);x.save();if(shake>1)x.translate(R(-shake,shake),R(-shake,shake));bg(t);
+ daoYun(t);boss(t);
+ let cx=W/2,cy=H*.48; if(run){let p=(t-t0)/1000;
+  if(p>.2&&p<1.6){jade(cx,H*.68,t);talisman(cx,cy,Math.min(W,H)*.28,t);particle(cx,H*.68,'#34d399',5,3);particle(cx,cy,'#67e8f9',4,5)}
+  if(p>1.4&&p<2.5){for(let i=0;i<3;i++)bolt(R(W*.08,W*.92),0,cx,cy);talisman(cx,cy,Math.min(W,H)*.38,t);particle(cx,cy,'#fde68a',6,6)}
+  if(p>2.1&&p<3.2){let n=Math.floor(clamp((p-2.1)/1.1*36,0,36));for(let i=0;i<n;i++){let a=i/36*Math.PI*2; sword(cx,cy,a,100+30*Math.sin(i),.9)}particle(cx,cy,'#c4b5fd',7,5)}
+  if(p>3.05&&p<3.8){slow=.32;chant.textContent='天　命……';chant.style.opacity=1;particle(cx,cy,'#fff',5,2)}
+  if(p>=3.8&&!finished){finished=true;slow=1;chant.textContent='破　界！';chant.style.opacity=1;flash=1;shake=30;ring(cx,cy,Math.max(W,H)*.75,'#fff');ring(cx,cy,Math.min(W,H)*.45,'#facc15');particle(cx,cy,'#fff',130,15);particle(cx,cy,'#67e8f9',90,12);particle(cx,cy,'#facc15',70,10);dmg.style.opacity=1;dmg.animate([{transform:'scale(.3)'},{transform:'scale(1.2)'},{transform:'scale(1)'}],{duration:700});setTimeout(()=>{dmg.style.opacity=.95},100)}
+  if(p>4.4){chant.textContent='無極魔尊　—　生命歸零';chant.style.opacity=.95;btn.textContent='⚔ 再次施放'}
+ }
+
+ for(const b of bolts){x.save();x.globalAlpha=b.life/18;x.strokeStyle='#bffcff';x.shadowBlur=25;x.shadowColor='#67e8f9';x.lineWidth=3;x.beginPath();b.p.forEach((q,i)=>i?x.lineTo(q.x,q.y):x.moveTo(q.x,q.y));x.stroke();x.restore()}
+ for(const r of rings){x.save();x.globalAlpha=r.life/35;x.strokeStyle=r.col;x.shadowBlur=30;x.shadowColor=r.col;x.lineWidth=5;x.beginPath();x.arc(r.x,r.y,r.r,0,Math.PI*2);x.stroke();x.restore()}
+ for(const p of qi){x.save();x.globalAlpha=p.life/p.max;x.fillStyle=p.col;x.shadowBlur=15;x.shadowColor=p.col;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill();x.restore()}
+ if(run&&((t-t0)/1000)>3.9){x.save();x.globalAlpha=.9;x.translate(cx,cy);x.rotate(-.08);x.shadowBlur=55;x.shadowColor='#fff';x.fillStyle='#f8fdff';x.beginPath();x.moveTo(0,-H*.62);x.lineTo(30,H*.18);x.lineTo(0,H*.08);x.lineTo(-30,H*.18);x.closePath();x.fill();x.restore()}
+ hero(t);
+ if(flash>.01){x.fillStyle=`rgba(255,255,255,${flash*.72})`;x.fillRect(0,0,W,H)}
+ x.restore();requestAnimationFrame(render);
+}
+btn.onclick=()=>{reset();run=true;t0=performance.now();btn.textContent='⚔ 技能演出中…';setTimeout(()=>{if(!run)return},4700);setTimeout(()=>run=false,6500)};
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
