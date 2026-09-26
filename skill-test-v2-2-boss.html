@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>天命・破界｜V2.2 Boss實戰架構測試</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#03050d;touch-action:none}
+canvas{display:block;width:100%;height:100%}
+#hint{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);font:600 13px system-ui;color:#e9fbff;letter-spacing:2px;text-shadow:0 0 12px #5deaff;pointer-events:none;white-space:nowrap}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas><div id="hint">點擊重新施放｜天命・破界</div>
+<script>
+(()=> {
+const c=document.getElementById('c'),ctx=c.getContext('2d',{alpha:false});
+let W=0,H=0,D=1,start=performance.now(),last=0;
+const TAU=Math.PI*2;
+function resize(){
+ D=Math.min(devicePixelRatio||1,1.5); W=innerWidth; H=innerHeight;
+ c.width=Math.floor(W*D); c.height=Math.floor(H*D);
+ ctx.setTransform(D,0,0,D,0,0);
+}
+addEventListener('resize',resize,{passive:true});resize();
+
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t)}
+function easeOut(t){return 1-Math.pow(1-clamp(t,0,1),3)}
+function txt(s,size,y,a=1){
+ ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.font=`700 ${size}px system-ui`;
+ ctx.fillStyle='#effcff';ctx.shadowBlur=16;ctx.shadowColor='#52e8ff';ctx.fillText(s,W/2,y);ctx.restore();
+}
+function circle(cx,cy,r,stroke,lw,a,rot=0){
+ ctx.save();ctx.globalAlpha=a;ctx.translate(cx,cy);ctx.rotate(rot);ctx.strokeStyle=stroke;ctx.lineWidth=lw;
+ ctx.shadowBlur=12;ctx.shadowColor=stroke;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.stroke();ctx.restore();
+}
+function bagua(cx,cy,r,rot,a){
+ ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);ctx.globalAlpha=a;
+ ctx.strokeStyle='#f2c95c';ctx.lineWidth=2;ctx.shadowBlur=10;ctx.shadowColor='#e7bd50';
+ ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.stroke();
+ ctx.beginPath();ctx.arc(0,0,r*.76,0,TAU);ctx.stroke();
+ for(let i=0;i<8;i++){
+   let q=i*Math.PI/4;
+   ctx.save();ctx.rotate(q);
+   ctx.translate(0,-r*.87);
+   ctx.lineWidth=5;ctx.strokeStyle='#f5d477';ctx.shadowBlur=0;
+   for(let j=0;j<3;j++){
+     let yy=(j-1)*8;
+     ctx.beginPath();ctx.moveTo(-16,yy);ctx.lineTo(-3,yy);ctx.stroke();
+     ctx.beginPath();ctx.moveTo(3,yy);ctx.lineTo(16,yy);ctx.stroke();
+   }
+   ctx.restore();
+ }
+ // yin-yang
+ let rr=r*.20;
+ ctx.fillStyle='#f5d477';ctx.beginPath();ctx.arc(0,0,rr,Math.PI/2,Math.PI*1.5);ctx.arc(0,-rr,rr,-Math.PI/2,Math.PI/2);ctx.arc(0,0,rr,Math.PI/2,Math.PI*1.5);ctx.fill();
+ ctx.fillStyle='#0a1020';ctx.beginPath();ctx.arc(0,0,rr,-Math.PI/2,Math.PI/2);ctx.arc(0,rr,rr,Math.PI/2,Math.PI*1.5);ctx.arc(0,0,rr,-Math.PI/2,Math.PI/2);ctx.fill();
+ ctx.fillStyle='#f5d477';ctx.beginPath();ctx.arc(0,-rr*.5,rr*.12,0,TAU);ctx.fill();
+ ctx.fillStyle='#0a1020';ctx.beginPath();ctx.arc(0,rr*.5,rr*.12,0,TAU);ctx.fill();
+ ctx.restore();
+}
+function sword(cx,cy,len,ang,s=1,a=1,hot=false){
+ ctx.save();ctx.translate(cx,cy);ctx.rotate(ang);ctx.globalAlpha=a;
+ const L=len*s;
+ ctx.shadowBlur=hot?22:12;ctx.shadowColor=hot?'#ffe27a':'#63eaff';
+ let grad=ctx.createLinearGradient(0,-L*.5,0,L*.5);
+ grad.addColorStop(0,'#ffffff');grad.addColorStop(.48,'#c9faff');grad.addColorStop(.78,hot?'#fff0a0':'#6bdff4');grad.addColorStop(1,'#d2a943');
+ ctx.fillStyle=grad;ctx.beginPath();
+ ctx.moveTo(0,-L*.55);ctx.lineTo(L*.10,-L*.34);ctx.lineTo(L*.055,L*.30);ctx.lineTo(0,L*.46);ctx.lineTo(-L*.055,L*.30);ctx.lineTo(-L*.10,-L*.34);ctx.closePath();ctx.fill();
+ ctx.shadowBlur=0;ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1;
+ ctx.beginPath();ctx.moveTo(0,-L*.48);ctx.lineTo(0,L*.36);ctx.stroke();
+ ctx.strokeStyle='#f4cc5e';ctx.lineWidth=Math.max(2,3*s);
+ ctx.beginPath();ctx.moveTo(-L*.15,L*.31);ctx.lineTo(L*.15,L*.31);ctx.stroke();
+ ctx.strokeStyle='#805f2c';ctx.lineWidth=Math.max(3,5*s);
+ ctx.beginPath();ctx.moveTo(0,L*.34);ctx.lineTo(0,L*.49);ctx.stroke();
+ ctx.restore();
+}
+function boss(cx,cy,scale,hp,hit){
+ ctx.save();ctx.translate(cx,cy);ctx.scale(scale,scale);
+ ctx.globalAlpha=.92;
+ ctx.shadowBlur=24;ctx.shadowColor=hit?'#ff624d':'#b22b38';
+ // silhouette
+ ctx.fillStyle='#15121d';ctx.beginPath();
+ ctx.moveTo(-90,40);ctx.quadraticCurveTo(-130,-10,-78,-80);
+ ctx.lineTo(-35,-115);ctx.lineTo(-10,-78);ctx.lineTo(10,-125);ctx.lineTo(40,-80);
+ ctx.quadraticCurveTo(105,-55,100,35);ctx.lineTo(55,95);ctx.lineTo(-60,95);ctx.closePath();ctx.fill();
+ // horns
+ ctx.fillStyle='#4b2935';ctx.beginPath();ctx.moveTo(-42,-82);ctx.lineTo(-80,-145);ctx.lineTo(-20,-105);ctx.closePath();ctx.fill();
+ ctx.beginPath();ctx.moveTo(42,-82);ctx.lineTo(80,-145);ctx.lineTo(20,-105);ctx.closePath();ctx.fill();
+ // eyes
+ ctx.shadowBlur=14;ctx.shadowColor='#ff4338';ctx.fillStyle='#ff513e';
+ ctx.beginPath();ctx.ellipse(-32,-48,12,7,-.18,0,TAU);ctx.ellipse(32,-48,12,7,.18,0,TAU);ctx.fill();
+ // core
+ ctx.fillStyle='#8e1d35';ctx.shadowColor='#ff3152';ctx.beginPath();ctx.arc(0,5,23,0,TAU);ctx.fill();
+ ctx.restore();
+ // HP
+ const bw=190,bh=9,x0=cx-bw/2,y0=cy-145*scale;
+ ctx.save();ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(x0,y0,bw,bh);
+ ctx.fillStyle='#d94152';ctx.shadowBlur=8;ctx.shadowColor='#ff4050';ctx.fillRect(x0,y0,bw*clamp(hp,0,1),bh);
+ ctx.restore();
+}
+function particles(cx,cy,r,n,seed,a,col){
+ ctx.save();ctx.globalAlpha=a;ctx.fillStyle=col;
+ for(let i=0;i<n;i++){
+   const k=i+seed*31;
+   const ang=(Math.sin(k*12.7)*.5+.5)*TAU;
+   const rr=r*(.25+.75*((Math.sin(k*7.31)*.5+.5)));
+   const px=cx+Math.cos(ang)*rr, py=cy+Math.sin(ang)*rr*.55;
+   ctx.beginPath();ctx.arc(px,py,1+((Math.sin(k*3.1)+1)*.7),0,TAU);ctx.fill();
+ }
+ ctx.restore();
+}
+function slash(cx,cy,p){
+ ctx.save();ctx.translate(cx,cy);ctx.rotate(-.28);ctx.globalAlpha=.95;
+ ctx.shadowBlur=30;ctx.shadowColor='#67eaff';
+ const gr=ctx.createLinearGradient(-W*.55,0,W*.55,0);
+ gr.addColorStop(0,'rgba(70,225,255,0)');gr.addColorStop(.42,'#dffcff');gr.addColorStop(.52,'#fff0a3');gr.addColorStop(1,'rgba(255,210,80,0)');
+ ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(-W*.55,-7-18*p);ctx.quadraticCurveTo(0,-55,W*.55,0);ctx.quadraticCurveTo(0,55,-W*.55,7+18*p);ctx.fill();
+ ctx.restore();
+}
+
+function draw(now){
+ const t=((now-start)/1000)%10.8,cx=W/2,cy=H*.47;
+ ctx.clearRect(0,0,W,H);
+ // stable background
+ let bg=ctx.createRadialGradient(cx,H*.43,20,cx,H*.43,Math.max(W,H)*.75);
+ bg.addColorStop(0,'#172849');bg.addColorStop(.45,'#0a1022');bg.addColorStop(1,'#02040b');
+ ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='rgba(60,87,122,.22)';ctx.beginPath();
+ ctx.moveTo(0,H*.62);ctx.lineTo(W*.17,H*.42);ctx.lineTo(W*.33,H*.61);ctx.lineTo(W*.52,H*.35);ctx.lineTo(W*.71,H*.59);ctx.lineTo(W*.88,H*.43);ctx.lineTo(W,H*.62);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+
+ let hp=1,hit=0;
+ if(t>=7.1&&t<7.7) hit=(t-7.1)/.6;
+ if(t>=7.7) hp=.28;
+ if(t>=9.2) hp=.12;
+
+ // Boss is present for the whole combat
+ boss(cx,cy+10,Math.min(W,H)/900,hp,hit>0);
+
+ if(t<1.8){
+   let p=easeOut(t/1.8);
+   bagua(cx,cy,90+190*p,-t*.25,.95);
+   particles(cx,cy,260*p,20,t,'',.55,'#61eaff');
+   txt('靈氣匯聚',25,H*.78,p);
+ } else if(t<3.3){
+   let p=easeOut((t-1.8)/1.5);
+   bagua(cx,cy,230,-t*.22,.98);
+   for(let i=0;i<12;i++){
+     let a=i*TAU/12+t*.35;
+     sword(cx+Math.cos(a)*(125+35*p),cy+Math.sin(a)*(82+25*p),76,a+Math.PI/2,.75,.9);
+   }
+   txt('劍陣初成',26,H*.78,p);
+ } else if(t<4.8){
+   let p=easeOut((t-3.3)/1.5);
+   bagua(cx,cy,240,t*.2,1);
+   for(let i=0;i<20;i++){
+     let a=i*TAU/20+t*.5;
+     sword(cx+Math.cos(a)*170,cy+Math.sin(a)*105,72,a+Math.PI/2,.68,.82);
+   }
+   sword(cx,cy-5,Math.min(W,H)*.54,0,1.12,1,true);
+   txt('劍來',31,H*.78,p);
+ } else if(t<6.1){
+   let p=easeOut((t-4.8)/1.3);
+   bagua(cx,cy,245,-t*.35,1);
+   for(let i=0;i<24;i++){
+     let a=i*TAU/24+t*.65, rr=175;
+     sword(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*.62,68,a+Math.PI/2,.62,.9);
+   }
+   txt('萬劍歸宗',30,H*.78,p);
+ } else if(t<7.1){
+   let p=easeOut((t-6.1)/1);
+   bagua(cx,cy,250,t*.45,1);
+   for(let i=0;i<18;i++){
+     let a=i*TAU/18+t*.75,rr=190*(1-p)+60;
+     sword(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*.6,70,a+Math.PI/2,.6,.8);
+   }
+   sword(cx,cy-5,Math.min(W,H)*(.56+.18*p),0,1.18,1,true);
+   txt('天命・破界',31,H*.78,p);
+ } else if(t<7.7){
+   const p=easeOut((t-7.1)/.6);
+   slash(cx,cy,p);
+   particles(cx,cy,320,45,t,.75,'#ffe07a');
+   ctx.globalAlpha=.38*(1-p);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+   txt('破界！',34,H*.78,p);
+ } else if(t<9.2){
+   particles(cx,cy,300,35,t,.6,'#64eaff');
+   bagua(cx,cy,250,(t-7.7)*.2,.28*(1-(t-7.7)/1.5));
+   txt('Boss重創',27,H*.78,1-(t-7.7)/1.5);
+ } else {
+   particles(cx,cy,220,18,t,.35,'#9eefff');
+   txt('一劍，破界。',25,H*.78,.8);
+ }
+ requestAnimationFrame(draw);
+}
+function play(){start=performance.now();requestAnimationFrame(draw)}
+c.addEventListener('pointerdown',play,{passive:true});
+play();
+})();
+</script>
+</body>
+</html>
